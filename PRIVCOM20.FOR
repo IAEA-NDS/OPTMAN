@@ -3,7 +3,7 @@ C     START of privcom20
 C     *******************************************************
 C==========================================================================
 C     PRIVATE COMMONS FOR EACH PARALLEL THREAD TO BE USED AS INCLUDE BLOCK
-
+C     Weights and effective deformations
 
 
 C     C     FROM SUBROUTINE KNDITD        
