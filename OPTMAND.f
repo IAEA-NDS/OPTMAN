@@ -1947,8 +1947,8 @@ C     This is a parallel loop
      * 'Outside parallel reg. for A=',I3,' FI=',D13.6,
      * ' NNTI=',I4,' FU=',D13.6,' NNTT=',I4/)
       
-      WRITE (21,160) NINT(ATIS(IIS)), FI,FU/NNTT
-  160 FORMAT(/1X,'NUCLEUS MASS IS=',I3,
+      WRITE (21,160) NINT(ATIS(IIS)),NINT(ZNUCIS(IIS)), FI,FU/NNTT
+  160 FORMAT(/1X,'NUCLEUS MASS IS=',I3, 3X,'CHARGE IS=',I3,
      *        5X,'FU FOR NUCLEUS IS=',D14.8, ' CUMULATIVE FU=',D14.8/)
          
   600 CONTINUE 
