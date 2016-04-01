@@ -1,0 +1,100 @@
+C     *******************************************************
+C     START of privcom9  
+C     *******************************************************
+C==========================================================================
+C     PRIVATE COMMONS FOR EACH PARALLEL THREAD TO BE USED AS INCLUDE BLOCK
+
+
+C     FROM SUBROUTINE KNCOE   
+      COMMON/SHAMO/BET3,ETO,AMUO,HWO,BB32,DPAR
+
+     */ALL/ALK11(15),ALK21(15),ALK22(15),ALK31(15),ALK32(15)
+     *,ALK41(15),ALK42(15),ALK43(15),B0LK1(15),
+     *B0LK2(15),B1LK21(15),B1LK22(15),B2LK31(15),B2LK32(15),B2LK33(15)
+     */OLL/B0O1(15),B1O21(15),B1O22(15),B2O31(15),B2O32(15),B2O33(15),
+     *BO2(15),B0O2(15)
+     */TRIGF/TRIG(40,40,14)
+     
+C     FROM SUBROUTINE KNDIT      
+     */QNBBAND/NUMB(40),BETB(40)                                  
+     */SHEM2/GIT(40),EP0(40),EP1(40),EP2(40),EP12(40),ANG(40,2),EPB(40),
+     *EPG(40),EGB(40),AIT(31,16),PT(40),FOG(2,8,8),XI(40),ANB(40),
+     *CD(40,2)
+     */OVKN/FOV(40,40,4),CG1,SG1,CG2,SG2,CSG11,CG4,SG4,CSG22,CSG31,
+     *CSG13,CG3,SG3,CSG21,CSG12
+
+     */INRMi/BB42,GAMG,DELG
+     */INRM/AMO,BMO,CMO
+
+     */FOK12/FOK(6,6,2)
+C    */ALFA/AIGS(40),AGSIC(40) 
+     */ALFAi/AGSIC(40) 
+     */ALFA/AIGS(40) 
+
+    
+C     FROM SUBROUTINE PREQU       
+      COMMON/OVLG/ANG1,ANG2,FOLAG,FOLAC,FOLAS,CD1,CD2,DG1,DG2,NNTG
+     */OVLB/X1,P1,ANU1,X2,P2,ANU2,FOLAR,NNT
+     */AA/ANO(40)
+
+C     FROM SUBROUTINE SUBROUTINE FUDNU
+      COMMON/FUDN/Y,DN,ANU,DNV,CDV
+      
+C     FROM SUBROUTINE MATAM
+      COMMON/VEC/TM(16,16),AM(16,16),EIN(31,16),NK,KMI,ITAU
+      COMMON/MAT/GAM,IS,NO 
+      
+C     FROM SUBROUTINE VECNO
+      COMMON/VEC1/TM1(16,16),AM1(16,16)
+      
+C     FROM SUBROUTINE EIT12      
+      COMMON/EIT/EPIT1,EPIT2,EPIT12
+      COMMON/XI12/XIT,XIT1,DET,NROOT
+      
+C     FROM SUBROUTINE ANUDF      
+
+C     FROM SUBROUTINE DETX12
+
+C     FROM SUBROUTINE ANDET0
+
+
+C     FROM SUBROUTINE TRLAG     
+     */OVLG1/FOLC2,FOLS2,FOLC3
+
+      
+C     FROM SUBROUTINE OVLAGE   
+
+C     FROM SUBROUTINE OVLAGE          !!!!!!! NOT CHANGED YET!!!!!  
+
+      
+C     FROM SUBROUTINE OVLAB
+
+C     FROM SUBROUTINE OVLAO
+
+
+C     FROM SUBROUTINE INERMO
+     */PB/PBET2,PBET3
+     
+     
+C     FROM SUBROUTINE TRANS 
+     */TR/BE2(41,41),BE4(41,41),BE3(41,41)
+     */TR1/BE0(41,41) 
+
+C     FROM SUBROUTINE SHEM
+     */SGB/FOLGB(10),FOLB(10),FOLKS(10),FOLGA(10)
+
+CC    /SHAMO/ is input
+CC    new commons added: /INRMi/,/ALFAi/
+CC
+CC    these commomns need initialization (COPYIN)
+!$OMP THREADPRIVATE(/SHAMO/,/INRMi/,/ALFAi/) 
+CC
+!$OMP THREADPRIVATE(/TRIGF/,/QNBBAND/,/SHEM2/,/OVKN/,/INRM/)
+!$OMP THREADPRIVATE(/FOK12/,/ALFA/,/OVLG/,/OVLB/,/AA/,/FUDN/,/VEC/)
+!$OMP THREADPRIVATE(/MAT/,/VEC1/,/EIT/,/XI12/,/PB/,/TR/,/TR1/)
+!$OMP THREADPRIVATE(/SGB/)
+     
+ 
+C     *******************************************************
+C     END of privcom9
+C     *******************************************************
