@@ -1973,7 +1973,7 @@ C
       PRINT 139,FU
       WRITE (21,139) FU
   139 FORMAT(/1X,'FU=',E14.7,' starting next iteration'/)
-      IF(NPJ(63).EQ.1.OR.NPJ(58).EQ.1 .AND. MEPRI.LT.98) 
+      IF(NPJ(63).EQ.1.OR.NPJ(58).EQ.1 .AND. MEPRI.LT.98)
      *            PRINT 140,AMUOIS(MEBET)
       IF(NPJ(63).EQ.1.OR.NPJ(58).EQ.1) WRITE (21,140) AMUOIS(MEBET)
   140 FORMAT (40X,'AMUO=',F20.12/)
