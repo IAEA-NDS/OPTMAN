@@ -2022,7 +2022,7 @@ C     *******************************************************
     2 CONTINUE
     1 CONTINUE
       INFOR=1
-      CALL INMAT
+      CALL INMATLU
       DO 3 I=1,NCLL
       I1=(I-1)*NCLL
       DO 3 K=1,NCLL
@@ -2060,7 +2060,7 @@ C     IF(MEPRI.LT.98) PRINT 111,CCR,CCI
       ABI(IK)=BMI(IK)
     9 CONTINUE
       INFOR=2
-      CALL INMAT
+      CALL INMATLU
       DO 10 I=1,NCLL
       I1=(I-1)*NCLL
       DO 10 K=1,NCLL
@@ -2104,7 +2104,7 @@ C     *******************************************************
       SUBROUTINE INMAT
 C     *******************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      REAL*16 FFR1,AB,FR
+      REAL*16 FFR1,AB,FR 
 
       INCLUDE 'PRIVCOM.FOR'
       LG=NCLL
