@@ -53,7 +53,7 @@ else ifeq ($(FC),ifort)
   #------------------------------------------------------------------------------------------------
   # FFLAGS =  -O3 -x=host -logo -parallel -openmp-report1 -par-threshold2 -openmp -vec-report1
   # flags for automatic & openMP directives
-  # LIBS = -openmp-lib compat
+  LIBS =  -mkl#-openmp-lib compat
   #----flags for automatic parallelization
   FFLAGS = -O3 -qopenmp#-x=host -parallel -par-report1
   # Flags for ECIS
@@ -118,7 +118,7 @@ endif
 %.o : %.f
 	$(FC) $(FFLAGS) -c $<
 
-OBJF = OPTMAND.o SHEMSOFD.o dispers.o KNDITD.o ccrd.o ABCTpar.o DATETpar.o
+OBJF = OPTMAND.o SHEMSOFD.o dispers.o KNDITD.o ccrd.o ABCTpar.o DATETpar.o LU_matrix_inv.o
 
 all: 
 	$(MAKE) optmand
