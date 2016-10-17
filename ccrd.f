@@ -2022,7 +2022,11 @@ C     *******************************************************
     2 CONTINUE
     1 CONTINUE
       INFOR=1
+#ifdef LAPACK      
       CALL INMATLU
+#else
+      CALL INMAT
+#endif
       DO 3 I=1,NCLL
       I1=(I-1)*NCLL
       DO 3 K=1,NCLL
@@ -2060,7 +2064,11 @@ C     IF(MEPRI.LT.98) PRINT 111,CCR,CCI
       ABI(IK)=BMI(IK)
     9 CONTINUE
       INFOR=2
+#ifdef LAPACK      
       CALL INMATLU
+#else
+      CALL INMAT
+#endif
       DO 10 I=1,NCLL
       I1=(I-1)*NCLL
       DO 10 K=1,NCLL
@@ -2103,55 +2111,216 @@ C9998 FORMAT(3I5)
 C     *******************************************************
       SUBROUTINE INMAT
 C     *******************************************************
-      IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      REAL*16 FFR1,AB,FR 
-
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+C     IMPLICIT none
+      REAL*16 PIVR,PIVI,ELEMR,ELEMI,DETR,DETI,ABRKK,ABIKK,ABRKJ,ABIKJ,
+     *AMMRIK,AMMIIK,ABRKM,ABIKM 
+      REAL*16  SUMDR,SUMDI,SUMNR,SUMNI
+      REAL*16 MOD2KK,AAR,AAI,MAR,MAI,EPS
+      
+      
+      
+      REAL*16 AMRIK,AMIIK,ABRIK,ABIIK,AMRKM,AMIKM
+      
+      
       INCLUDE 'PRIVCOM.FOR'
+      INCLUDE 'PRIVCOM10.FOR'
+    
+               
+      DETR=1.Q0
+      DETI=1.Q0
+      EPS=1.0Q-18
+      ONEQ=1.Q0
+C      IR=1
       LG=NCLL
-      DO 1 K=1,NCLL
-      K1=(K-1)*NCLL
-      DO 1 L=1,NCLL
-      KL=K1+L
-      FI1(KL)=ABI(KL)
-    1 FI2(KL)=ABR(KL)
-      CALL INVER
-      DO 2 K=1,NCLL
-      K1=(K-1)*NCLL
-      DO 2 L=1,NCLL
-      KL=K1+L
-      FR2(KL)=FI2(KL)
-      FFR1=ABR(KL)
-      DO 5 M=1,NCLL
+      LG2=LG*LG
+      DO 1 I=1,LG2
+      AMMR(I)=ABR(I)
+    1 AMMI(I)=ABI(I)
+      DO 60 K=1,LG
+      K1G=(K-1)*LG
+      KK=K1G+K
+      ABRKK=ABR(KK)
+      ABIKK=ABI(KK)
+      DETR=DETR*ABRKK-DETI*ABIKK
+      DETI=DETR*ABIKK+DETI*ABRKK
+      MOD2KK=ABRKK**2+ABIKK**2
+      PIVR=ABRKK/MOD2KK
+      PIVI=-ABIKK/MOD2KK
+     
+      DO 20 J=1,LG
+      KJ=K1G+J
+      ABRKJ=ABR(KJ)
+      ABIKJ=ABI(KJ)
+      ABR(KJ)=ABRKJ*PIVR-ABIKJ*PIVI
+   20 ABI(KJ)=ABIKJ*PIVR+ABRKJ*PIVI
+      ABR(KK)=PIVR
+      ABI(KK)=PIVI
+      
+      DO 50 I=1,LG
+      I1G=(I-1)*LG
+      IK=I1G+K
+      IF(I-K)30,50,30
+   30 ELEMR=ABR(IK)
+      ELEMI=ABI(IK)
+      ABR(IK)=0.Q0
+      ABI(IK)=0.Q0
+      
+      DO 40 J=1,LG
+      IJ=I1G+J
+      KJ=K1G+J
+      ABRKJ=ABR(KJ)
+      ABIKJ=ABI(KJ)
+      ABR(IJ)=ABR(IJ)-ABRKJ*ELEMR+ABIKJ*ELEMI
+   40 ABI(IJ)=ABI(IJ)-ABRKJ*ELEMI-ABIKJ*ELEMR
+   50 CONTINUE
+   60 CONTINUE
+      
+      
+      SUMDR=0.Q0
+      SUMDI=0.Q0
+      SUMNR=0.Q0
+      SUMNI=0.Q0
+      DO 2 I=1,LG
+      I1=LG*(I-1)
+      DO 3 M=1,LG
+      AAR=0.Q0
+      AAI=0.Q0
+      DO 4 K=1,LG
+      K1=LG*(K-1)
+      IK=I1+K
       KM=K1+M
-      AB=ABI(KM)
-      M1=(M-1)*NCLL
-      DO 5 N=1,NCLL
-      MN=M1+N
-      NL=(N-1)*NCLL+L
-    5 FFR1=FFR1+AB*FI2(MN)*FI1(NL)
-    2 FR1(KL)=FFR1
-      DO 3 K=1,NCLL
-      K1=(K-1)*NCLL
-      DO 3 L=1,NCLL
-      KL=K1+L
-    3 FI2(KL)=FR1(KL)
-      CALL INVER
-      DO 4 K=1,NCLL
-      K1=(K-1)*NCLL
-      DO 4 L=1,NCLL
-      KL=K1+L
-      ABR(KL)=FI2(KL)
-      AB=0.
-      DO 6 M=1,NCLL
-      KM=K1+M
-      FR=FR2(KM)
-      M1=(M-1)*NCLL
-      DO 6 N=1,NCLL
-      MN=M1+N
-      NL=(N-1)*NCLL+L
-    6 AB=AB-FR*FI1(MN)*FI2(NL)
-    4 ABI(KL)=AB
-      RETURN
+      AMMRIK=AMMR(IK)
+      AMMIIK=AMMI(IK)
+      ABRKM=ABR(KM)
+      ABIKM=ABI(KM)
+      MAR=AMMRIK*ABRKM-AMMIIK*ABIKM
+      MAI=AMMIIK*ABRKM+AMMRIK*ABIKM
+      AAR=AAR+MAR
+      AAI=AAI+MAI
+    4 CONTINUE
+      IF(I.EQ.M) SUMDR=SUMDR+QABS(AAR)
+      IF(I.NE.M) SUMNR=SUMNR+QABS(AAR)
+      IF(I.EQ.M) SUMDI=SUMDI+QABS(AAI)
+      IF(I.NE.M) SUMNI=SUMNI+QABS(AAI)
+    3 CONTINUE
+    2 CONTINUE
+      SUMDR=SUMDR/LG
+      SUMDI=SUMDI/LG
+     
+
+      IF(QABS(SUMNR).LE.EPS.AND.QABS(SUMDR-1.D0).LT.EPS
+     *.AND.QABS(SUMNI).LE.EPS.AND.QABS(SUMDI).LE.EPS) go to 19 
+      
+     
+C     ITTERATIONS TO MAKE INVERTED MATRIX ACCURATE
+C     
+      ITER=0
+   12 ITER=ITER+1
+   
+      
+      DO 5 I=1,LG
+      I1G=(I-1)*LG       
+      DO 9 M=1,LG
+      M1G=(M-1)*LG
+      AAR=0.Q0
+      AAI=0.Q0
+      DO 14 K=1,LG
+      K1G=(K-1)*LG
+      IK=I1G+K
+      KM=K1G+M
+      ABRKM=ABR(KM)
+      ABIKM=ABI(KM)
+      AMMRIK=AMMR(IK)
+      AMMIIK=AMMI(IK)
+      MAR=ABRKM*AMMRIK-ABIKM*AMMIIK
+      MAI=ABRKM*AMMIIK+ABIKM*AMMRIK    
+      AAR=AAR+MAR
+      AAI=AAI+MAI
+   14 CONTINUE
+      IM=I1G+M
+      AMAIR(IM)=AAR
+      IF(I.EQ.M) AMAIR(IM)=AAR-ONEQ
+      AMAII(IM)=AAI
+    9 CONTINUE
+    5 CONTINUE
+    
+      DO 6 I=1,LG
+      I1G=(I-1)*LG       
+      DO 7 M=1,LG
+      M1G=(M-1)*LG
+      AAR=0.Q0
+      AAI=0.Q0
+      DO 8 K=1,LG
+      K1G=(K-1)*LG
+      IK=I1G+K
+      KM=K1G+M
+      ABRKM=AMAIR(KM)
+      ABIKM=AMAII(KM)
+      AMRIK=ABR(IK)
+      AMIIK=ABI(IK)
+      MAR=ABRKM*AMRIK-ABIKM*AMIIK
+      MAI=ABRKM*AMIIK+ABIKM*AMRIK    
+      AAR=AAR+MAR
+      AAI=AAI+MAI
+    8 CONTINUE
+      IM=I1G+M
+      ABRC(IM)=AAR
+      ABIC(IM)=AAI
+    7 CONTINUE
+    6 CONTINUE
+      DO 10 KK=1,LG2
+      ABR(KK)=ABR(KK)-ABRC(KK) 
+   10 ABI(KK)=ABI(KK)-ABIC(KK)
+      SUMDR=0.Q0
+      SUMDI=0.Q0
+      SUMNR=0.Q0
+      SUMNI=0.Q0
+      DO 27 I=1,LG
+      I1=LG*(I-1)
+      DO 33 M=1,LG
+      AAR=0.Q0
+      AAI=0.Q0
+      DO 31 K=1,LG
+      K1=LG*(K-1)
+      IK=I1+K
+      KM=K1+M    
+      ABRIK=ABR(IK)
+      ABIIK=ABI(IK)
+      AMRKM=AMMR(KM)
+      AMIKM=AMMI(KM)
+      MAR=ABRIK*AMRKM-ABIIK*AMIKM
+      MAI=ABRIK*AMIKM+ABIIK*AMRKM    
+      AAR=AAR+MAR
+      AAI=AAI+MAI       
+   31 CONTINUE    
+      IF(I.EQ.M) SUMDR=SUMDR+QABS(AAR)
+      IF(I.NE.M) SUMNR=SUMNR+QABS(AAR)
+      IF(I.EQ.M) SUMDI=SUMDI+QABS(AAI)
+      IF(I.NE.M) SUMNI=SUMNI+QABS(AAI)
+   33 CONTINUE
+   27 CONTINUE
+      SUMDR=SUMDR/LG
+      SUMDI=SUMDI/LG
+ 
+      IF(QABS(SUMNR).LE.EPS.AND.QABS(SUMDR-1.Q0).LT.EPS
+     *.AND.QABS(SUMNI).LE.EPS.AND.QABS(SUMDI).LE.EPS) go to 19
+
+        IF(ITER.LE.2) GO TO 12
+        
+      
+      IF(MEPRI.LT.98) PRINT 24,SUMNR,SUMNI,SUMDR,SUMDI,INFOR,ITER 
+ 
+C      PRINT 24,SUMNR,SUMNI,SUMDR,SUMDI,INFOR,ITER
+
+   24 FORMAT(10X,'WARNING! MATRIX IS POORLY INVERTED'/
+     *5X,'SUM OF RE NON-DIAG. ELEM-S=',D11.5,
+     *5X,'SUM OF IM NON-DIAG. ELEM-S=',D11.5,/
+     *5X,'SUM OF RE DIAGONAL=',D20.10,
+     *5X,'SUM OF IM DIAGONAL=',D11.5, ',INFOR=',I2,',ITER=',I2)
+     
+   19 RETURN
+      
       END
 C     *******************************************************
       SUBROUTINE INVER

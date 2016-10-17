@@ -9,7 +9,13 @@ C      OR FROM SRM (IN THIS CASE ADDITIONAL TO RIGID ROTATOR COUPLING
 C      COMING FROM DYNAMICS IS ACCOUNTED, OPTIONALY COUPLING COMMING FROM
 c      NUCLEAE VOLUME CONSERVATION CAN BE ACCOUNTED)
 C
-
+C      ENABLING "OPENMP" OPTION IN COMPILER WILL PRODUCE MULTITHREADED CODE
+C      DEFAULT COMPILATION WILL PRODUCE SINGLETHREADED CODE
+C      
+C      TO USE LAPACK'S MATRIX INVERSION (FASTER, WITHOUT REAL*16) SET "DLAPACK" OPTION 
+C      FOR THE COMPILER AND ADD LAPACK LIBRARY PATH TO COMPILER AND LINKER
+C      THIS ALSO REQUIRES ENABLED COMPILER PREPOCESSING (FPP OR CPP)
+C      DEFAULT COMPILATION WILL USE MATRIX INVERSION FROM INMAT SUBROUTINE
 C
 C      FULL DOUBLE PRECISION (REAL*8 = DOUBLE PRECISION, COMPLEX*16 = DOUBLE COMPLEX)
 C      To allow automatic extension to quadruple precision (REAL*16, COMPLEX*32)
@@ -31,6 +37,11 @@ C                           E-MAIL: R.CapoteNoy@iaea.org
 C
 C      JOSE M. QUESADA    - DISPERSIVE OPTICAL MODEL POTENTIAL RELATIONS,
 C                           LANE CONSISTENCY,E-MAIL: quesada@us.es
+C      
+C      DMITRY MARTYANOV   - THEORY DEVELOPMENT in COOPERATION WITH
+C                           E. SOUKHOVITSKI, CODE DEVELOPEMENT
+C                           E-MAIL: dmart@sosny.bas-net.by
+C     
 C
 C      MAIN REFERENCES:   1. E.SH. SOUKHOVITSKII, S. CHIBA, R. CAPOTE, JOSE M.
 C                            QUESADA, S. KUNIEDA and G.B. MOROGOVSKII, TECHNICAL 
@@ -69,8 +80,8 @@ C     REAL*8  LFA(400),dtmp
       DOUBLE PRECISION A
       COMMON/LOFAC/A(800)
 
-      INTEGER NTHREADS, TID, OMP_GET_NUM_THREADS,
-     *  OMP_GET_THREAD_NUM
+      INTEGER NTHREADS, TID
+!$    INTEGER OMP_GET_NUM_THREADS, OMP_GET_THREAD_NUM
 C     INTEGER omp_set_num_threads
 
 C----------------------------------------------------------------------------
@@ -118,8 +129,8 @@ C       Output filename fixed to OPTMAN.OUT for EMPIRE
      *  '***********************************************'
         WRITE(21,'(5x,A)')
      *  '*      CODE OPTMAN VERSION 16 ( JANUARY 2016)    *'
-        WRITE(21,'(5x,A)')
-     *  '*      OPENMP version for parallel execution  *'
+!$      WRITE(21,'(5x,A)')
+!$   *  '*      OPENMP version for parallel execution  *'
         WRITE(21,'(5x,A)')
      *  '*                                             *'
         WRITE(21,'(5x,A)')
@@ -145,7 +156,7 @@ C       Output filename fixed to OPTMAN.OUT for EMPIRE
 C--------------------- FOR NORMAL OPERATION (NOT EMPIRE) ---------------
         WRITE(*,'(A)')' ***********************************************'
         WRITE(*,'(A)')' *      CODE OPTMAN VERSION 16 ( JANUARY 2016) *'
-        WRITE(*,'(A)')' *      OPENMP version for parallel execution  *'
+!$      WRITE(*,'(A)')' *      OPENMP version for parallel execution  *'
         WRITE(*,'(A)')' *                                             *'
         WRITE(*,'(A)')' *  DISPERSIVE RELATIONS AND LANE CONSISTENCY  *'
         WRITE(*,'(A)')' *      LANE CONSISTENT COULOMB CORRECTION     *'
@@ -172,8 +183,8 @@ C       open(unit=21,file=TRIM(fname)//'.OUT')
      *  '***********************************************'
         WRITE(21,'(5x,A)')
      *  '*     CODE OPTMAN VERSION 16 ( JANUARY 2016)     *'
-        WRITE(21,'(5x,A)')
-     *  '*    OPENMP version for parallel execution    *'
+!$      WRITE(21,'(5x,A)')
+!$   *  '*    OPENMP version for parallel execution    *'
         WRITE(21,'(5x,A)')
      *  '*                                             *'
         WRITE(21,'(5x,A)')
@@ -257,9 +268,11 @@ C           1-USES NON-AXIAL WEIGHTS
 C
 c      NTHREADS = omp_set_num_threads(16)
 !$OMP PARALLEL PRIVATE(TID) 
-      TID = OMP_GET_THREAD_NUM()
+      TID = 0
+      NTHREADS = 1
+!$    TID = OMP_GET_THREAD_NUM()
       IF(TID.eq.0) then
-        NTHREADS = OMP_GET_NUM_THREADS()
+!$      NTHREADS = OMP_GET_NUM_THREADS()
         PRINT *
         PRINT *, 'Number of threads =', NTHREADS
         PRINT *

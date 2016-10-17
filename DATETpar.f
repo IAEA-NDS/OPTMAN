@@ -31,9 +31,11 @@ C     These common is used FOR initialization CCOULii <-> CCOUL
       COMMON/NIND/IIS
 !$OMP THREADPRIVATE(/NIND/)     
 
-      INTEGER TID, OMP_GET_THREAD_NUM
+      INTEGER TID
+!$    INTEGER OMP_GET_THREAD_NUM
 
-      TID = OMP_GET_THREAD_NUM()
+      TID = 0
+!$    TID = OMP_GET_THREAD_NUM()
 
       FUii   = 0.d0
       NNTTii = 0

@@ -23,14 +23,22 @@ C     *******************************************************
        DO 1 L=1,NCLL
         KL=K1+L
         A_MAT(K,L)=dcmplx(ABR(KL),ABI(KL))
-    1 CONTINUE 
-  
+    1 CONTINUE  
+#ifdef LAPACK
       call ZGETRF(M,M,A_MAT,M,IPIV,info)
+#else
+      print *, 'non MKL'
+#endif
+      
       if(info.ne.0) then
        write(*,*)"!!!!!!!!!!!!!!!ZGETRF failed"
       end if
   
+#ifdef LAPACK
       call ZGETRI(M,A_MAT,M,IPIV,WORK,M,info)
+#else
+      print *, 'non MKL'
+#endif
       if(info .ne. 0) then
        write(*,*)"!!!!!!!!!!!!!!!!!ZGETRI failed"
       end if

@@ -25,10 +25,12 @@ C     Input commons (do not change with energy)
 
       
 
-      INTEGER TID, OMP_GET_THREAD_NUM
+      INTEGER TID
+!$    INTEGER OMP_GET_THREAD_NUM
 
-      TID = OMP_GET_THREAD_NUM()
-      PRINT *, 'Thread',TID,' starting...','IIparal=',IIparal
+      TID = 0
+!$    TID = OMP_GET_THREAD_NUM()
+!$    PRINT *, 'Thread',TID,' starting...','IIparal=',IIparal
 
       EN=EE(IIparal)
 
@@ -370,8 +372,9 @@ C    */(1X,I5,25X,F10.6))
      */1X,'SF0=',E15.7,8X,'SF1=',E15.7,8X,'SF2=',E15.7/)
 
       NUR=NURRR
-      TID = OMP_GET_THREAD_NUM()
-      PRINT *, 'Thread',TID,' finished.',' IIparal=',IIparal
+      TID = 0
+!$    TID = OMP_GET_THREAD_NUM()
+!$    PRINT *, 'Thread',TID,' finished.',' IIparal=',IIparal
 
       RETURN
       END
