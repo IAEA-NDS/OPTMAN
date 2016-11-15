@@ -939,7 +939,28 @@ C     TRLJ(L,2)=TRLJ(L,2)/2./(JO(1)+1.)/(2.*LL+1)
       IF(MEPRI.LT.98) THEN
         PRINT 999,LL,TLL,SRL,SIL
         WRITE(21,999)LL,TLL,SRL,SIL
-	ENDIF
+      ENDIF
+c
+c  [GN] 11/20015 : Add SPRT+ESW calculations to get the following parameters
+c
+c .SFR0,1,2       : strenght function form SPRT and ESW
+c .RRPRIME0,1,2  : effective radius
+c     
+       
+       IF(LL.eq.0)then
+         SFR0=0.0
+       RRPRIME0=0.0
+       CALL SPRT(LL,TLL,SRL,SIL,AT,EN,SFR0,RRPRIME0)
+       ELSEIF(LL.eq.1)then
+         SFR1=0.0
+       RRPRIME1=0.0
+       CALL SPRT(LL,TLL,SRL,SIL,AT,EN,SFR1,RRPRIME1) 	 
+       ELSEIF(LL.eq.2)then
+         SFR2=0.0
+       RRPRIME2=0.0
+       CALL SPRT(LL,TLL,SRL,SIL,AT,EN,SFR2,RRPRIME2) 	 
+       ENDIF
+c [GN]        
  888  CONTINUE
       ltlmax = Min(ltlmax,LLLMAX-1)
 C
@@ -3503,10 +3524,10 @@ CCHA  IF(MECHA.EQ.1) EFERM=EFERMP
       IF(MECHA.EQ.1) EPAVER=EFERM+DAVERP
       EINT=EN
       
-      IF(MEPRI.LT.98) 
-     *WRITE (21,99999) MECHA,MECUL,CDE,CCDE,EFERM,EFERMN,EFERMP,EN,AT
-99999 FORMAT (2I4,7E12.4) 
-     
+c     DON'T CALCULATE CORRECTLY VOLUME INTEGRALS WITHOUT LOWER LINE!!!
+      PRINT *,''
+c
+      
 CCHA  EN=EN-EFERM-CDE
       EN=EN-EFERM
           

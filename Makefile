@@ -118,7 +118,7 @@ endif
 %.o : %.f
 	$(FC) $(FFLAGS) -c $<
 
-OBJF = OPTMAND.o SHEMSOFD.o dispers.o KNDITD.o ccrd.o ABCTpar.o DATETpar.o LU_matrix_inv.o
+OBJF = OPTMAND.o SHEMSOFD.o dispers.o KNDITD.o ccrd.o ABCTpar.o DATETpar.o LU_matrix_inv.o opt2Rmatrix.o
 
 all: 
 	$(MAKE) optmand

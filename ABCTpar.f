@@ -248,6 +248,12 @@ C     WRITE(21,130)(K,CSN(K),K=1,NMAX)
       WRITE(21,130)(K,EL(k),0.5*JO(k),cpar(NPO(k)),CSN(K),K=1,NMAX)
       IF(MEPRI.NE.99) PRINT 129,SF0,SF1,SF2
       WRITE(21,129)SF0,SF1,SF2
+c
+c [GN] 11/2015 add strenght function from SPRT+ESW
+c
+      WRITE(21,229)SFR0,SFR1,SFR2
+      WRITE(21,329)RRPRIME0,RRPRIME1,RRPRIME2
+c [GN] end      
 C RCN
 C
 C     CROSS SECTION FILES
@@ -370,6 +376,13 @@ C    */(1X,I5,25X,F10.6))
      */(2X,I2,3X,F7.4,2x,F4.1,A1,10X,F10.6))
   129 FORMAT(/30X,'STRENGTH  FUNCTIONS'
      */1X,'SF0=',E15.7,8X,'SF1=',E15.7,8X,'SF2=',E15.7/)
+c
+c [GN] 11/2015 add strenght function from SPRT+ESW
+c
+  229 FORMAT(/25X,'STRENGTH  FUNCTIONS FROM ESW'
+     */1X,'S0  =',E15.7,8X,'S1  =',E15.7,8X,'S2  =',E15.7)
+  329 FORMAT(1X,'R0  =',E15.7,8X,'R1  =',E15.7,8X,'R2  =',E15.7)
+c [GN] end
 
       NUR=NURRR
       TID = 0

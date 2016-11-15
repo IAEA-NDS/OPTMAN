@@ -311,6 +311,12 @@ C     WRITE(21,130)(K,CSN(K),K=1,NMAX)
       IF(EN.GT.0.75) GOTO 33
       IF(MEPRI.LT.98) PRINT 129,SF0,SF1,SF2
       WRITE(21,129)SF0,SF1,SF2
+c
+c [GN] 11/2015 add strenght function from sprt+ESW 
+c
+      WRITE(21,229)S0,S1,S2
+      WRITE(21,329)RPRIME0,RPRIME1,RPRIME2
+c [GN] end     
  1292 FORMAT( 1X,'NEUTRON ENERGY =',F10.6,2X,'TOTAL CR-SECT.=',F10.6,
      * ' TID=',I2)
    92 FORMAT(/1X,'NEUTRON ENERGY =',F10.6/1X,'TOTAL  CR-SECT.=',F10.6/
@@ -331,6 +337,13 @@ C    */(1X,I5,25X,F10.6))
      */(2X,I2,3X,D13.7,2x,F4.1,A1,10X,F10.6))
   129 FORMAT(/30X,'STRENGTH  FUNCTIONS'
      */1X,'SF0=',E15.7,8X,'SF1=',E15.7,8X,'SF2=',E15.7)
+c
+c [GN] 11/2015 add strenght function from SPRT+ESW
+c
+  229 FORMAT(/25X,'STRENGTH  FUNCTIONS FROM ESW'
+     */1X,'S0  =',E15.7,8X,'S1  =',E15.7,8X,'S2  =',E15.7)
+  329 FORMAT(1X,'R0  =',E15.7,8X,'R1  =',E15.7,8X,'R2  =',E15.7)
+c [GN] end
       IF(NSF1(IIS,IE).NE.1) GO TO 32
       NNTTii=NNTTii+1
 C     FU=FU+((SE1(IIS,IE)-SF0)/DS1(IIS,IE))**2

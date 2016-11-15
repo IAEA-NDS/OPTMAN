@@ -135,6 +135,10 @@ C       Output filename fixed to OPTMAN.OUT for EMPIRE
      *  '*      CODE OPTMAN VERSION 16 ( JANUARY 2016)    *'
 !$      WRITE(21,'(5x,A)')
 !$   *  '*      OPENMP version for parallel execution  *'
+#ifdef LAPACK      
+        WRITE(21,'(5x,A)')
+     *  '*   USE LAPACK LIBRARY FOR MATRIX INVERSION   *'
+#endif        
         WRITE(21,'(5x,A)')
      *  '*                                             *'
         WRITE(21,'(5x,A)')
@@ -161,6 +165,9 @@ C--------------------- FOR NORMAL OPERATION (NOT EMPIRE) ---------------
         WRITE(*,'(A)')' ***********************************************'
         WRITE(*,'(A)')' *      CODE OPTMAN VERSION 16 ( JANUARY 2016) *'
 !$      WRITE(*,'(A)')' *      OPENMP version for parallel execution  *'
+#ifdef LAPACK      
+        WRITE(*,'(A)')' *   USE LAPACK LIBRARY FOR MATRIX INVERSION   *'
+#endif         
         WRITE(*,'(A)')' *                                             *'
         WRITE(*,'(A)')' *  DISPERSIVE RELATIONS AND LANE CONSISTENCY  *'
         WRITE(*,'(A)')' *      LANE CONSISTENT COULOMB CORRECTION     *'
