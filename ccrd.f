@@ -897,7 +897,7 @@ C     IF(NJ.EQ.2*(NSPI+1)) GO TO 7
     3 CONTINUE
     1 CONTINUE
     7 NJ=NSS
-      IF(NRESN.EQ.0) GO TO 220
+      IF(NRESN.EQ.0) GO TO 222
 
       IF(MEPRI.LT.98) THEN
         PRINT *,' RENORMALIZATON FROM RESONANCES'
@@ -910,11 +910,12 @@ C     IF(NJ.EQ.2*(NSPI+1)) GO TO 7
       WRITE (21,*) ' RENORMALIZATON FROM RESONANCES'
       WRITE (21,919) ANORM,CST,CSN(1),CSTRT,CSRINT
 C     PAUSE 999
- 220  IF(MEJOB.EQ.2) GO TO 17
+C 220  IF(MEJOB.EQ.2) GO TO 17
       
 c      IF(NSPI.GT.1) GO TO 17
-
-      IF(MEPRI.LT.98) THEN
+ 222  CONTINUE
+      
+      IF(MEPRI.LT.98.AND.MEJOB.EQ.1) THEN
       PRINT 987
       WRITE(21,987)
  987  FORMAT (//1X,'ORB. MOMENT',14X,'TRANSITIONS',12X,'SR',18X,'SI'/)
@@ -936,7 +937,7 @@ C     TRLJ(L,2)=TRLJ(L,2)/2./(JO(1)+1.)/(2.*LL+1)
       SRL=SSR(L)/(NSPI+1.D0)/(JO(1)+1.)/(2.D0*LL+1.D0)
       SIL=SSI(L)/(NSPI+1.D0)/(JO(1)+1.)/(2.D0*LL+1.D0)
       TRL(L)=TLL
-      IF(MEPRI.LT.98) THEN
+      IF(MEPRI.LT.98.AND.MEJOB.EQ.1) THEN
         PRINT 999,LL,TLL,SRL,SIL
         WRITE(21,999)LL,TLL,SRL,SIL
       ENDIF
@@ -946,7 +947,7 @@ c
 c .SFR0,1,2       : strenght function form SPRT and ESW
 c .RRPRIME0,1,2  : effective radius
 c     
-       
+c       print *,'!!! BEFORE SPRT!!!: ', LL,TLL,SRL,SIL,AT,EN
        IF(LL.eq.0)then
          SFR0=0.0
        RRPRIME0=0.0
@@ -960,9 +961,13 @@ c
        RRPRIME2=0.0
        CALL SPRT(LL,TLL,SRL,SIL,AT,EN,SFR2,RRPRIME2) 	 
        ENDIF
+c       print *,'!!! AFTER SPRT!!!: ', SFR0,RRPRIME0,SFR1,RRPRIME1
+c     *     ,SFR1,RRPRIME1
 c [GN]        
  888  CONTINUE
       ltlmax = Min(ltlmax,LLLMAX-1)
+ 
+ 220  IF(MEJOB.EQ.2) GO TO 17
 C
 C     Formatting the output for reaction codes (e.g. EMPIRE,GNASH)
 C     RCN
