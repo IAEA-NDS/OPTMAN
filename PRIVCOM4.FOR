@@ -7,7 +7,7 @@ C     PRIVATE COMMONS FOR EACH PARALLEL THREAD TO BE USED AS INCLUDE BLOCK
 C     FROM SUBROUTINE RACAH  
       COMMON/LOFAC/A(800)
        
-!$OMP THREADPRIVATE(/LOFAC/)
+ccccccc THREADPRIVATE(/LOFAC/)
 
 
 C     *******************************************************
