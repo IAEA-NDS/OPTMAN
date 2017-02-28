@@ -82,7 +82,8 @@ C  *************************************************************
 C     REAL*8  LFA(400),dtmp  
 
       DOUBLE PRECISION A
-      COMMON/LOFAC/A(800)
+      INCLUDE 'PRIVCOM4.FOR'
+c      COMMON/LOFAC/A(800)
 
       INTEGER NTHREADS, TID
 !$    INTEGER OMP_GET_NUM_THREADS, OMP_GET_THREAD_NUM
