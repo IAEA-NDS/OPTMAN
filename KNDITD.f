@@ -1160,12 +1160,13 @@ C    *          EFFDEF(NU,NU1,6)/BTGS)*0.282094791773878D0/AVOL
      
  
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK)  
+C       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK) 
+       IF(MEVOL.EQ.1.AND.K.EQ.KK)  
      *         CVNRV0(K2PN)=-(EFFDEF(NU,NU1,1)*BTGS*2.D0+BTGS2+                           
      *          EFFDEF(NU,NU1,6)/BTGS)*0.282094791773878D0/AVOL
      
  
-
+      ! IF(MEDEF.EQ.0) CVNRV0(K2PN)=0.0  ! temporary workout for odd
 
 
       JD=JO2

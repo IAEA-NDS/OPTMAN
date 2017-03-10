@@ -4,6 +4,7 @@
       INTEGER IIparal
 
       CHARACTER*1  cpar
+      DIMENSION JTEMP(40)
       LOGICAL EMPIRE
       CHARACTER*20 fname 
       COMMON/INOUT/fname,EMPIRE
@@ -81,6 +82,16 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
   601 CONTINUE
       NUR=NURC
 
+      IF(MOD(JO(1),2).GT.0) THEN
+          JTEMP=JU
+          JU=NINT(DBLE(JO)/4.0)*2
+          NTU=1
+          NNB=0
+          NNG=0
+          NNO=0
+          NPI=1
+      END IF      
+      
           IF(MEDEF.GT.0.OR.MEAXI.EQ.1) CALL OVLOPT
  
        DO IID=1,NUR
@@ -89,7 +100,17 @@ C             EFFDIS(IIS,IID,JJD,:)=EFFDEF(IID,JJD,:)
              EFFDEF(JJD,IID,:)=EFFDEF(IID,JJD,:)
          END DO
        END DO
-      
+
+      IF(MOD(JO(1),2).GT.0)  THEN
+          NUMBGS=NUMB(1)
+           DO IID=1,NUR
+             DO JJD=IID,NUR
+                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(IID).NE.NUMBGS)
+     *                  EFFDEF(JJD,IID,:)=0.0
+             END DO
+           END DO          
+          JU=JTEMP
+      END IF         
   
       GO TO 639
   638 DO 602 I=1, NUR

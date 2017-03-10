@@ -5,7 +5,7 @@
       INTEGER NNTTii,MEISii,IIS,IIIS
       REAL*8 FUii,FUU
       CHARACTER*1 cpar
-
+      DIMENSION JTEMP(40)
 C---------------------------------
 C     These commons are also used and initialized in ABCT 
       INCLUDE 'PRIVCOM10.FOR'
@@ -37,6 +37,8 @@ C     These common is used FOR initialization CCOULii <-> CCOUL
       TID = 0
 !$    TID = OMP_GET_THREAD_NUM()
 
+
+      
       FUii   = 0.d0
       NNTTii = 0
       MEISii = 1
@@ -72,7 +74,8 @@ C    *           ' MEIS=',MEISii
 C126  FORMAT(/1x,A7,I2,A10,I2,A4,F8.4,A4,I3,A5,I2,A6,I2,
 C    *          A7,I2,A6,I1)
 
-      IF(MEPOT.EQ.1.AND.MEDEF.EQ.0.AND.MEAXI.EQ.0) GO TO 701
+      IF(MEPOT.EQ.1.AND.MEDEF.EQ.0.AND.MEAXI.EQ.0.AND.MEVOL.EQ.0)
+     *     GO TO 701
       HW=HWIS(IIIS)
       AMB0=AMB0IS(IIIS)
       AMG0=AMG0IS(IIIS)
@@ -149,6 +152,16 @@ C
   601 CONTINUE
       NUR=NURC
  
+      IF(MOD(JO(1),2).GT.0) THEN
+          JTEMP=JU
+          JU=NINT(DBLE(JO)/4.0)*2
+          NTU=1
+          NNB=0
+          NNG=0
+          NNO=0
+          NPI=1
+      END IF
+      
        IF(MEDEF.GT.0.OR.MEAXI.EQ.1) CALL OVLOPT 
        DO IID=1,NUR
          DO JJD=IID,NUR
@@ -156,10 +169,22 @@ C
              
          END DO
        END DO
+
+       
+      IF(MOD(JO(1),2).GT.0)  THEN
+          NUMBGS=NUMB(1)
+           DO IID=1,NUR
+             DO JJD=IID,NUR
+                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(IID).NE.NUMBGS)
+     *                  EFFDEF(JJD,IID,:)=0.0
+             END DO
+           END DO          
+          JU=JTEMP
+      END IF
+       
       DEFNUL=0.D0
       DEFNUL=SUM(EFFDEF*EFFDEF)     
 
-      
       GO TO 639
   638 DO 602 I=1, NUR
       IF(MECHA.EQ.0.AND. NCAIS(IIIS,I).NE.NCAIS(IIIS,1)) GO TO 602
