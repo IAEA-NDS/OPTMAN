@@ -70,6 +70,8 @@ C     SUBROUTINE OPTMAN12(fname)
 C  *************************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
       LOGICAL EMPIRE
+      logical f_ex
+      character*20 answ
       CHARACTER*20 fname 
       COMMON/INOUT/fname,EMPIRE
 
@@ -186,10 +188,24 @@ C       fname='rigidtest'
 C       fname='globalFe'
 C       fname='TESTCAL'
 
-        open(unit=20,file=TRIM(fname)//'.INP',STATUS='OLD')
+        inquire(file=TRIM(fname)//'.INP',exist=f_ex)
+        if(f_ex) then
+          open(unit=20,file=TRIM(fname)//'.INP',STATUS='OLD')
+        else 
+          print *,'Input file not found.'
+          stop
+        end if 
 C
-        open(unit=21,file=TRIM(fname)//'.OUT',STATUS='NEW')
-C       open(unit=21,file=TRIM(fname)//'.OUT')
+C        open(unit=21,file=TRIM(fname)//'.OUT',STATUS='NEW')
+        inquire(file=TRIM(fname)//'.OUT',exist=f_ex)
+        if(f_ex) then
+          print *,'Output file already exists. Enter [yes] to'//
+     *            ' overwrite or any other to cancel.'
+          read(*,'(A20)') answ
+          if(trim(answ).ne.'yes') stop
+        end if 
+        
+        open(unit=21,file=TRIM(fname)//'.OUT')
 
         WRITE(21,'(5x,A)')
      *  '***********************************************'
@@ -197,6 +213,10 @@ C       open(unit=21,file=TRIM(fname)//'.OUT')
      *  '*     CODE OPTMAN VERSION 16 ( JANUARY 2016)     *'
 !$      WRITE(21,'(5x,A)')
 !$   *  '*    OPENMP version for parallel execution    *'
+#ifdef LAPACK      
+        WRITE(21,'(5x,A)')
+     *  '*   USE LAPACK LIBRARY FOR MATRIX INVERSION   *'
+#endif                
         WRITE(21,'(5x,A)')
      *  '*                                             *'
         WRITE(21,'(5x,A)')
