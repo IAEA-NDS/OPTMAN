@@ -561,9 +561,12 @@ C     *******************************************************
       DOUBLE PRECISION jc,jj
       INTEGER ltlmax, itmp, LLLMAX
       CHARACTER*1 parc
+      LOGICAL unformatted
 
       PARAMETER (LLLMAX=100)
       DIMENSION STL(LLLMAX)
+      
+      real*8, parameter :: haf = 0.5D0
 
       CHARACTER*20 fname
       COMMON/INOUT/fname
@@ -977,6 +980,12 @@ C
 C
 C      EMPIRE (ecis06 formatted output)
 C
+#ifdef FORMATTEDOUT
+      unformatted = .false.  
+#else
+      unformatted = .true.  
+#endif          
+
        numbtl = 0
        DO L=1,ltlmax
         IF(NPO(1)*(-1)**(L-1).EQ.+1) THEN 
@@ -994,68 +1003,122 @@ C      from ecis06
  1007  FORMAT (1X,F9.1,4X,A1,1X,I4)                                     CAL1-428
  1008  FORMAT (1X,I2,I6,F9.1,2X,1P,D18.8,0P)                            CAL1-429
 C----------------
-      
-       open(unit=92,file=TRIM(fname)//'.TLJ')
+       if (unformatted) then
+           open(unit=92,file=TRIM(fname)//'.TLJ', form='unformatted')
+       else
+           open(unit=92,file=TRIM(fname)//'.TLJ')
+       endif
 
 C      WRITE(92,'(10H<TLJ     >,F10.2,F10.5,F10.2,2I5)') 
-       WRITE(92,1006) ANEU,EN,AT,NINT(0.5*JO(1)),numbtl
+       IF(.NOT.unformatted)
+     & WRITE(92,1006)ANEU,EN,AT,NINT(0.5*JO(1)),numbtl
+
+       parc = '+'
+       numbtl = 0
+
        DO L=1,ltlmax
         LL = L-1 
         IF(NPO(1)*(-1)**LL.EQ.-1) CYCLE
-        IF(L.NE.1 .AND. TRLJ(L,1).GT.0.) THEN
-C         WRITE(92,'(1X,F4.1,1X,A1,1X,I4)') L-1-0.5,'+',1
-C         WRITE(92,'(1X,I2,I4,F6.1,2X,1P,D14.7,0P,3X)')
-          WRITE(92,1007)         L-1-0.5,'+',1
-          WRITE(92,1008) 1, L-1, L-1-0.5, TRLJ(L,1)
+        IF(L.NE.1 .AND. TRLJ(L,1).GT.0) THEN
+          numbtl = numbtl + 1
+          xz = dble(ll) - haf
+          IF(unformatted) then 
+            WRITE(92)                  xz, parc,1
+            WRITE(92)      1, ll, xz, TRLJ(L,1)
+          ELSE
+C           WRITE(92,1007)         L-1-0.5,'+',1
+C           WRITE(92,1008) 1, L-1, L-1-0.5, TRLJ(L,1)
+            WRITE(92,1007)             xz, parc,1
+            WRITE(92,1008) 1, ll, xz, TRLJ(L,1)
+          ENDIF
+
         ENDIF
-        IF(TRLJ(L,2).GT.0.) THEN
-C         WRITE(92,'(1X,F4.1,1X,A1,1X,I4)') L-1+0.5,'+',1
-C         WRITE(92,'(1X,I2,I4,F6.1,2X,1P,D14.7,0P,3X)')
-          WRITE(92,1007)         L-1+0.5,'+',1
-          WRITE(92,1008) 1, L-1, L-1+0.5, TRLJ(L,2)
+        IF(TRLJ(L,2).GT.0) THEN
+          numbtl = numbtl + 1
+          xz = dble(ll) + haf
+          IF(unformatted) then 
+            WRITE(92)                  xz, parc,1
+            WRITE(92)      1, ll, xz, TRLJ(L,2)
+          ELSE
+C           WRITE(92,1007)         L-1+0.5,'+',1
+C           WRITE(92,1008) 1, L-1, L-1+0.5, TRLJ(L,2)
+            WRITE(92,1007)             xz, parc,1
+            WRITE(92,1008) 1, ll, xz, TRLJ(L,2)
+          ENDIF 
         ENDIF
        ENDDO
+
+       parc='-'
+
        DO L=1,ltlmax
         LL = L-1 
         IF(NPO(1)*(-1)**LL.EQ.+1) CYCLE
         IF(L.NE.1 .AND. TRLJ(L,1).GT.0.) THEN
-C         WRITE(92,'(1X,F4.1,1X,A1,1X,I4)') L-1-0.5,'-',1
-C         WRITE(92,'(1X,I2,I4,F6.1,2X,1P,D14.7,0P,3X)')
-          WRITE(92,1007)         L-1-0.5,'-',1
-          WRITE(92,1008) 1, L-1, L-1-0.5, TRLJ(L,1)
+          numbtl = numbtl + 1
+          xz = dble(ll) - haf
+          IF(unformatted) then 
+            WRITE(92)                  xz, parc,1
+            WRITE(92)      1, ll, xz, TRLJ(L,1)
+          ELSE 
+C           WRITE(92,1007)         L-1-0.5,'-',1
+C           WRITE(92,1008) 1, L-1, L-1-0.5, TRLJ(L,1)
+            WRITE(92,1007)             xz, parc,1
+            WRITE(92,1008) 1, ll, xz, TRLJ(L,1)
+          ENDIF
         ENDIF
         IF(TRLJ(L,2).GT.0.) THEN
-C         WRITE(92,'(1X,F4.1,1X,A1,1X,I4)') L-1+0.5,'-',1
-C         WRITE(92,'(1X,I2,I4,F6.1,2X,1P,D14.7,0P,3X)')
-          WRITE(92,1007)         L-1+0.5,'-',1
-          WRITE(92,1008) 1, L-1, L-1+0.5, TRLJ(L,2)
+          numbtl = numbtl + 1
+          xz = dble(ll) + haf
+          IF(unformatted) then 
+            WRITE(92)                  xz, parc,1
+            WRITE(92)      1, ll, xz, TRLJ(L,2)
+          ELSE
+C           WRITE(92,1007)         L-1+0.5,'-',1
+C           WRITE(92,1008) 1, L-1, L-1+0.5, TRLJ(L,2)
+            WRITE(92,1007)             xz, parc,1
+            WRITE(92,1008) 1, ll, xz, TRLJ(L,2)
+          ENDIF
         ENDIF
        ENDDO
-       CLOSE(92)
+C      CLOSE(92)
 
        Stl = 0.d0
 
-       OPEN (45,STATUS = 'old',FILE = TRIM(fname)//'.TLJ', ERR=1200)
+       IF(unformatted) then 
+         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.tlj',
+     &         ERR=1200,form='unformatted')
+       ELSE
+         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.tlj', ERR=1200)
+         READ(45,*,END=1200)    ! To skip first line <TLJs.> ..
+       ENDIF 
 
-       READ (45,*,END = 1200)   ! To skip first line <TLJs.> ..
 C------JC,ParC is the channel spin and parity
 C------nceq is the number of coupled equations
- 1100  READ (45,'(1x,f9.1,4x,a1,1x,i4)',END = 1200) jc, parc, nceq  ! ecis06
+1100   IF(unformatted) then 
+           READ(45,END = 1200)      jc, parc, nceq  ! ecis06
+         ELSE
+           READ(45,1007,END = 1200) jc, parc, nceq  ! ecis06
+         ENDIF      
 C------Loop over the number of coupled equations
        DO nc = 1, nceq
 C--------Reading the coupled level number nlev, the orbital momentum L,
 C--------angular momentum j and Transmission coefficient Tlj,c(JC)
 C--------(nlev=1 corresponds to the ground state)
-         READ (45,*,END = 1200,ERR = 1200) nlev, l, jj, dtmp
+
+         IF(unformatted) then 
+           READ(45)   nlev, l, jj, dtmp
+         ELSE
+           READ(45,*) nlev, l, jj, dtmp
+         ENDIF
+
 C--------Selecting only ground state
          IF (dtmp.GT.1.D-15 .AND. l.LT.LLLMAX) THEN
 C-----------Averaging over particle and target spin, summing over channel spin jc
-            Stl(l + 1) = Stl(l + 1) + (2*jc + 1)*dtmp/DBLE(2*l + 1)
-     &                   /DBLE(2*0.5d0 + 1)
-     &                   /DBLE(JO(1) + 1)
+            dtmp = dtmp*(2.D0*jc + 1.D0)/(2.D0*haf + 1.D0)
+            Stl(l+1) = Stl(l+1) + dtmp/DBLE(2*l + 1)/DBLE(JO(1) + 1)
          ENDIF
        ENDDO
-       GOTO 1100
+       goto 1100
  1200  CLOSE (45)
 C
       ELSE
@@ -1096,8 +1159,8 @@ C       for EMPIRE
 C
         OPEN (46,FILE = trim(fname)//'_INC.LST')
         WRITE (46,'(A5,I6,1X,D12.6)') 'LMAX:', ltlmax, EN
-        DO l = 1, ltlmax
-          WRITE (46,*) l-1, stl(l)
+        DO l = 0, ltlmax
+          WRITE (46,*) l, stl(l+1)
         ENDDO
         WRITE (46,'(1x,A27,2x,6(D12.6,1x))') 
      &     'EL,TOT,REAC,INEL,CC,CSFus:',
@@ -1109,25 +1172,39 @@ C         WRITE (46,*) l-1, SNGL(sel(l))
 C       ENDDO
         CLOSE (46)
 
-C       OPEN (45,FILE = trim(fname)//'.INC',FORM = 'UNFORMATTED')
-        OPEN (45,FILE = trim(fname)//'.INC')
-        IF (MEREL.EQ.0) then 
-          itmp = 0 
-C         WRITE (45) ltlmax, EN, itmp
-          WRITE (45,'(1x,I4,2x,e13.6,2x,i4)') ltlmax, EN, itmp
+        IF(unformatted) THEN
+            OPEN (45,FILE = trim(fname)//'.INC',FORM = 'UNFORMATTED')
+            IF (MEREL.EQ.0) then 
+              itmp = 0 
+              WRITE (45) ltlmax, EN, itmp
+            ELSE
+              itmp = 1 
+              WRITE (45) ltlmax, EN, itmp
+            ENDIF
+            DO l = 0, ltlmax
+              WRITE (45) stl(l+1)
+            ENDDO
+            WRITE (45)
+     &       1000.d0*CSN(1), 1000.d0*CST, 1000.d0*CSR, 0.d0, 
+     &       1000.d0*SINLcc, 1000.d0*(CSR-SINLcc)          
         ELSE
-          itmp = 1 
-C         WRITE (45) ltlmax, EN, itmp
-          WRITE (45,'(1x,I4,2x,d12.6,2x,i4)') ltlmax, EN, itmp
+            OPEN (45,FILE = trim(fname)//'.INC')
+            IF (MEREL.EQ.0) then 
+              itmp = 0 
+              WRITE (45,'(1x,I4,2x,e13.6,2x,i4)') ltlmax, EN, itmp
+            ELSE
+              itmp = 1 
+              WRITE (45,'(1x,I4,2x,d12.6,2x,i4)') ltlmax, EN, itmp
+            ENDIF
+            DO l = 0, ltlmax
+              WRITE (45,*) stl(l+1)
+            ENDDO
+            WRITE (45,'(1x,6(d12.6,1x))') 
+     &       1000.d0*CSN(1), 1000.d0*CST, 1000.d0*CSR, 0.d0, 
+     &       1000.d0*SINLcc, 1000.d0*(CSR-SINLcc)                      
         ENDIF
-        DO l = 1, ltlmax
-C          WRITE (45) stl(l)
-           WRITE (45,*) stl(l)
-        ENDDO
-C       WRITE (45)
-        WRITE (45,'(1x,6(d12.6,1x))') 
-     &   1000.d0*CSN(1), 1000.d0*CST, 1000.d0*CSR, 0.d0, 
-     &   1000.d0*SINLcc, 1000.d0*(CSR-SINLcc)
+
+
 C
 C       A new flag is introduced to signal storage of the Shape elastic XS (Sel(L))
 C

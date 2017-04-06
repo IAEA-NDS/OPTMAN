@@ -20,6 +20,10 @@ C      DEFAULT (WITHOUT "DLAPACK") COMPILATION WILL USE MATRIX INVERSION FROM IN
 C      SUBROUTINE (USING REAL*16)
 C
 C      ENABLED COMPILER PREPOCESSING (FPP OR CPP) IS ALWAYS REQUIRED 
+C     
+C      FOR EMPIRE COMPILE WITH FLAG "/DEMPMODE" 
+C      FOR FORMATTED PRINT OF *.TLJ COMPILE WITH FLAG "/DFORMATTEDOUT"
+C      PLEASE USE THESE FLAGS INSTEAD OF CHANGING SOURCES      
 C
 C      FULL DOUBLE PRECISION (REAL*8 = DOUBLE PRECISION, COMPLEX*16 = DOUBLE COMPLEX)
 C      To allow automatic extension to quadruple precision (REAL*16, COMPLEX*32)
@@ -69,16 +73,16 @@ C  ****************************************************************
 C     SUBROUTINE OPTMAN12(fname)
 C  *************************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      LOGICAL EMPIRE
+      LOGICAL EMPIRE, unformat
       logical f_ex
       character*20 answ
       CHARACTER*20 fname 
-      COMMON/INOUT/fname,EMPIRE
+      COMMON/INOUT/fname,EMPIRE,unformat
 
       INCLUDE 'PRIVCOM10.FOR'
       INCLUDE 'PRIVCOM17D.FOR'  
       
-      DIMENSION TITLE(20)
+      DIMENSION TITLE(80)
 
       REAL*16 LFA(400),dtmp  
 C     REAL*8  LFA(400),dtmp  
@@ -122,8 +126,11 @@ C     Logical variable EMPIRE
 C     EMPIRE = .TRUE.  -> OPTMAN used within the EMPIRE system
 C     EMPIRE = .FALSE. -> OPTMAN used in stand-alone mode
 C
+#ifdef EMPMODE
+      EMPIRE = .true.  
+#else
       EMPIRE = .false.  
-
+#endif
       IF (EMPIRE) THEN 
 C--------------------- EMPIRE related i/o changes ----------------------
 C       Input filename fixed to OPTMAN.INP for EMPIRE
@@ -243,7 +250,7 @@ C        open(unit=21,file=TRIM(fname)//'.OUT',STATUS='NEW')
       CALL THORA(21)
 
             READ (20,4) TITLE
-            WRITE(21,'(7x,20A4/)') TITLE
+            WRITE(21,'(7x,A80/)') trim(TITLE)
             READ(20,1)MEJOB,MEPOT,MEHAM,MEPRI,MESOL,MESHA,MESHO,
      *                MEHAO,MEAPP,MEVOL,MEREL,MECUL,MERZZ,MERRR,
      *                MEDIS,MERIP,MEDEF,MEAXI
@@ -253,7 +260,7 @@ C     FOR EMPIRE OPERATION MEPRI IS SET TO 98
 C     TO MINIMIZE PRINTING DURING PARALLEL CALCULATIONS SET MEPRI to 99
 
     1 FORMAT(20I2)
-    4 FORMAT(20A4)
+    4 FORMAT(A80)
 C#1   MEJOP 1-JOB STANDARD*2-JOB WITH POTENTIAL OPTIMIZATION.
 C#2   MEPOT 1-POT-AL OF ROT.MODEL  YL0* 2-POT-AL EXPANDED BY BETTA
 C#3   MEHAM 1-RM* 2-VM* 3-DCHM* 6-5PARM* 4-FDM* 5-5PAR0M* 7-COUPL.GB
@@ -303,7 +310,7 @@ c      NTHREADS = omp_set_num_threads(16)
       TID = 0
       NTHREADS = 1
 !$    TID = OMP_GET_THREAD_NUM()
-      IF(TID.eq.0) then
+      IF(TID.eq.0.and.MEPRI.NE.98) then
 !$      NTHREADS = OMP_GET_NUM_THREADS()
         PRINT *
         PRINT *, 'Number of threads =', NTHREADS
@@ -740,7 +747,7 @@ C     This is a parallel loop
       ENDDO     
 !$OMP ENDDO 
 !$OMP END PARALLEL
-      PRINT *, 'Exit from the parallel region'
+      IF(MEPRI.NE.98) PRINT *, 'Exit from the parallel region'
       CALL THORA(21)
 
       RETURN
