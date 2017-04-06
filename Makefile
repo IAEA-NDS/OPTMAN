@@ -10,6 +10,27 @@ FC  =  ifort
 #FC  =  pfg90
 #FC  =  lf95
 
+
+# set mode
+MODE = 
+# set to "EMPIRE" for EMPIRE mode or leave empty for pure OPTMAN
+
+# set formatted output for *.tlj
+OUTMODE =
+# set to "formatted" for formatted output of *.tlj or leave blank
+# for unformatted
+
+# set parallel
+PARALLEL = 
+# set to "OPENMP" for parallelization or leave blank for single thread
+
+# set matrix inversion
+MATRIX = 
+# set to "LAPACK" for LAPACK matrix inversion or leave blank for
+# subroutine
+
+
+
 # various flags are set based on compiler FC:
 # FFLAGS are the normal complier options for production code
 # DFLAGS are the options used when debugging (except for ECIS)
@@ -28,7 +49,10 @@ ifeq ($(FC),gfortran)
   #----GNU gfortran FORTRAN compiler
   #---------------------------------
   #----flags for production compilation with gfortran
-  FFLAGS = -O3 -std=legacy -ftree-vectorize -ffast-math -fopenmp
+  FFLAGS = -O3 -std=legacy -ftree-vectorize -ffast-math -cpp
+  ifeq ($(PARALLEL),OPENMP) 
+    FFLAGS = $(FFLAGS) -fopenmp
+  endif
   #FFLAGS = -O3 -pg -std=legacy
   #----flags for debuging
   DFLAGS =  -O0 -g --bounds-check -std=legacy -ftrapv 
@@ -53,9 +77,15 @@ else ifeq ($(FC),ifort)
   #------------------------------------------------------------------------------------------------
   # FFLAGS =  -O3 -x=host -logo -parallel -openmp-report1 -par-threshold2 -openmp -vec-report1
   # flags for automatic & openMP directives
-  LIBS =  -mkl#-openmp-lib compat
+  ifeq ($(MATRIX),LAPACK) 
+    LIBS =  -mkl#-openmp-lib compat
+  endif
+  
   #----flags for automatic parallelization
-  FFLAGS = -O3 -qopenmp#-x=host -parallel -par-report1
+  FFLAGS = -O3 -fpp #-x=host -parallel -par-report1
+  ifeq ($(PARALLEL),OPENMP) 
+    FFLAGS = $(FFLAGS) -qopenmp
+  endif
   # Flags for ECIS
   EFLAGS = -O2 -x=host
   # Flags for OPTMAN
@@ -112,6 +142,18 @@ else ifeq ($(FC),lf90)
   #----flags for OPTMAN
   OFLAGS = -O2
 
+endif
+
+ifeq ($(MATRIX),LAPACK)
+   FFLAGS = $(FFLAGS) -DLAPACK
+endif
+
+ifeq ($(MODE),EMPIRE)
+   FFLAGS = $(FFLAGS) -DEMPMODE
+endif
+
+ifeq ($(OUTMODE),formatted)
+   FFLAGS = $(FFLAGS) -DFORMATTEDOUT
 endif
 
 # make sure MAKE knows f90 extension
