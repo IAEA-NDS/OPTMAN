@@ -152,9 +152,11 @@ C
   601 CONTINUE
       NUR=NURC
  
+      !JBASE=NINT(DBLE(JO(1))/4.0)*2
+      
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
-          JU=NINT(DBLE(JO)/4.0)*2
+          JU=NINT(DBLE(JO)/4.0)*2!-JBASE
           NTU=1
           NNB=0
           NNG=0
@@ -162,7 +164,8 @@ C
           NPI=1
       END IF
       
-       IF(MEDEF.GT.0.OR.MEAXI.EQ.1) CALL OVLOPT 
+      EFFDEF=0.d0
+       IF(MEDEF.GT.0.OR.MEAXI.EQ.1.OR.MEVOL.EQ.1) CALL OVLOPT 
        DO IID=1,NUR
          DO JJD=IID,NUR
              EFFDEF(JJD,IID,:)=EFFDEF(IID,JJD,:)

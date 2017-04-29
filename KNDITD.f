@@ -1355,7 +1355,9 @@ C    EFFECTIVE DEFORMATIONS OF OTHER BANDS
       IF(MEDEF.EQ.0.AND.MEVOL.EQ.0) GO TO 777
 c      IF(MEAXI.EQ.0) GO TO 777
 c      IF(MEDEF.EQ.0) GO TO 777
-      
+
+      IF(JO(1)/2*2.NE.JO(1)) GO TO 777
+  
       
        IF(L.GT.1 ) GO TO 88 
        
@@ -1363,7 +1365,7 @@ c      IF(MEDEF.EQ.0) GO TO 777
       IF(MEDEF.EQ.2.AND.IABS(KO1-KO2).EQ.4.AND.NPO(NU).EQ.NPO(NU1))   
      *       SCALE=DSIN(GAM0)/SQ2
       IF(MEDEF.EQ.2) GO TO 777
-       
+    
        
        IF(MEDEF.EQ.1.AND.NUMB1.EQ.NUMB2) SCALE=1.D0 + 
      *       (EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL   

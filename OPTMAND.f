@@ -82,7 +82,7 @@ C  *************************************************************
       INCLUDE 'PRIVCOM10.FOR'
       INCLUDE 'PRIVCOM17D.FOR'  
       
-      DIMENSION TITLE(80)
+      CHARACTER*80 TITLE
 
       REAL*16 LFA(400),dtmp  
 C     REAL*8  LFA(400),dtmp  
@@ -250,7 +250,7 @@ C        open(unit=21,file=TRIM(fname)//'.OUT',STATUS='NEW')
       CALL THORA(21)
 
             READ (20,4) TITLE
-            WRITE(21,'(7x,A80/)') trim(TITLE)
+            WRITE(21,'(7x,A)') trim(TITLE)
             READ(20,1)MEJOB,MEPOT,MEHAM,MEPRI,MESOL,MESHA,MESHO,
      *                MEHAO,MEAPP,MEVOL,MEREL,MECUL,MERZZ,MERRR,
      *                MEDIS,MERIP,MEDEF,MEAXI
