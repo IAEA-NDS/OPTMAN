@@ -812,6 +812,7 @@ C                 1:-COUPLED STATES ARE ORDERED BY GROWING MOMENTUM L
 C                    NO MORE THAN NCMA
 C=======================================================================
            READ(20,211)NUR,NST,NPD,LAS,MTET,LLMA,NCMA,NSMA,KODMA
+      PRINT *, "NUR etc... are read"
   211 FORMAT(20I3)
   234      FORMAT(6I3) 
       IF(LLMA.EQ.0.OR.LLMA.GT.89) LLMA=89
@@ -819,8 +820,9 @@ C=======================================================================
       IF(NSMA.EQ.0.OR.NSMA.GT.180) NSMA=180
            READ(20,234)(NSTIS(I),NURIS(I),MESOIS(I),NRES(I),
      *     MEDEIS(I),MEAXIS(I), I=1, MENUC)
+      PRINT *, "NSTIS etc... are read"
            READ(20,2) (WEI(I),I=1, MENUC)      
-
+      PRINT *, "WEI etc... are read"
       DO 600 IIS=1,MENUC
       NUR=NURIS(IIS)
       NST=NSTIS(IIS)
@@ -828,23 +830,28 @@ C=======================================================================
       MEDEF=MEDEIS(IIS)
       MEAXI=MEAXIS(IIS)
   
-      IF(MEHAM.GT.1.OR.MEDEF.GT.0.OR.MEAXI.EQ.1.OR.MEVOL.GT.0)      
-     *    READ(20,2)HWIS(IIS),AMB0IS(IIS),AMG0IS(IIS),
+      IF(MEHAM.GT.1.OR.MEDEF.GT.0.OR.MEAXI.EQ.1.OR.MEVOL.GT.0) THEN     
+          READ(20,2)HWIS(IIS),AMB0IS(IIS),AMG0IS(IIS),
      *GAM0IS(IIS),BET0IS(IIS),BET4IS(IIS),BB42IS(IIS),GAMGIS(IIS),
      *DELGIS(IIS),BET3IS(IIS),ETOIS(IIS),AMUOIS(IIS),HWOIS(IIS),
      *BB32IS(IIS),GAMDIS(IIS),DPARIS(IIS),GSHAEIS(IIS)
-           
+      PRINT *, "Ham params are read"          
+      END IF     
+      
            READ(20,2)(EEIS(IIS,I),I=1,NST)
+      PRINT *, "EEIS etc... are read"
            READ(20,1)(MCHAIS(IIS,I),I=1,NST)
-                 
+      PRINT *, "MCHAIS etc... are read"           
            IF(MEPOT.GT.1) GO TO 36
            READ(20,3)(ELIS(IIS,I),JOIS(IIS,I),NPOIS(IIS,I),
      *     KOIS(IIS,I),NCAIS(IIS,I),NUMBIS(IIS,I),BETBIS(IIS,I),
      *     AIGSIS(IIS,I),NTUIS(IIS,I),
      *     NNBIS(IIS,I),NNGIS(IIS,I),NNOIS(IIS,I),I=1,NUR)
-            GO TO 37
+           PRINT *, "ELIS etc... are read"  
+           GO TO 37
    36      READ(20,43)(ELIS(IIS,I),JOIS(IIS,I),NPOIS(IIS,I),NTUIS(IIS,I)
      *     ,NNBIS(IIS,I),NNGIS(IIS,I),NNOIS(IIS,I),NCAIS(IIS,I),I=1,NUR)
+           PRINT *, "ELIS etc... are read"  
 C====================================================================
 C     VR=VR0+VR1*EN+VR2*EN*EN      AR=AR0+AR1*EN
 C===================================================================
@@ -858,11 +865,12 @@ C====================================================================
    37      IF(NRESN.EQ.0) GO TO 212      
            READ(20,213)(ERIS(IIS,I),GNIS(IIS,I),GREIS(IIS,I)
      *      ,LOIS(IIS,I),JMIS(IIS,I),JCOIS(IIS,I),NELA(IIS,I),I=1,NRESN) 
-     
+           PRINT *, "ERIS etc... are read"  
        
   213      FORMAT(3E12.6,4I3)  
   212      READ(20,2)ANEU,ASP,ATIS(IIS),ZNUCIS(IIS),EFISN(IIS),
      *     EFISP(IIS)
+           PRINT *, "ANEU etc... are read"  
            
   600 CONTINUE 
         
@@ -877,7 +885,7 @@ C====================================================================
      *               CISO,WCISO,WDISO,EA,WDSHI,WDWID2,
      *               ALFNEW,VRD,CAVR,CARR,CAAR,CARD,
      *               CAAC 
-
+         PRINT *, "Potential params are read"
       IF(MEPRI.LT.98) 
      * PRINT 500,   ASP,(NINT(ATIS(I)),NINT(ZNUCIS(I)),I=1,MENUC)
 
@@ -1146,6 +1154,7 @@ C133  FORMAT(/130X,'NUCLEI(I) CHARGE = ',10(I3,1x)/)
       IF(MEPOT.GT.1) GO TO 607
       IF(NPD.EQ.0) GO TO 607
       READ(20,2)(BETIS(IIS,I),I=2,NPD,2)
+      PRINT *, "BETIS etc... are read" 
       IF(MEPRI.LT.98) PRINT 96,(I,BETIS(IIS,I),I=2,NPD,2)
       WRITE(21,96)(I,BETIS(IIS,I),I=2,NPD,2)
    96  FORMAT(6X,'NPD',5X,'DEFORMATION PARAMETER VALUES'/
@@ -1174,6 +1183,7 @@ C     Storing READ values INTO new VARIABLES (RR -> RRi)
       ACG=AC0i
 
       READ(20,112)(NPJ(I),I=1,75)
+      PRINT *, "NPJ(I) etc... are read"
       IF(MEPRI.LT.98) PRINT 99
       WRITE (21,99)
 

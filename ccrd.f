@@ -892,6 +892,19 @@ C     PAUSE 100
       SSR(LNJ1(IC)+1)=SSR(LNJ1(IC)+1)+(1.-2.*CI(IC,IC))*(JSS+1)
       SSI(LNJ1(IC)+1)=SSI(LNJ1(IC)+1)+2.*CR(IC,IC)*(JSS+1)
    15 CONTINUE
+      
+c      write(21,*) '*** C-matrix'
+c      write(21,'(A,I2,A,<INCC>(A,I2,A,I2,A,I2,A))')
+c     * '*** J=',JSS,'/2,',(' l_in=', LNJ1(Iiic),', j_in=',
+c     *   JNJ1(Iiic),'/2, N=', NNJ1(Iiic),';' ,Iiic=1,INCC)
+c      do Iiir=1,INCR
+c        write(21,'(A,I2,A,I2,A,I2,A,<INCC>(ES13.5,A,ES13.5))') 'l_out=',
+c     *     LNJ1(Iiir),', j_out=',JNJ1(Iiir),'/2, N=', NNJ1(Iiir),'; ',
+c     *     (CR(Iiic,Iiir),'+i*',CI(Iiic,Iiir) ,Iiic=1,INCC)
+c      enddo      
+c      write(21,*) '*** C-matrix end'
+      
+      
       IF(NSS.GE.NSMA) GO TO 7
     2 CONTINUE
 C     IF(NJ.EQ.2*(NSPI+1)) GO TO 7
