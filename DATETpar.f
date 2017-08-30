@@ -94,8 +94,13 @@ C    *          A7,I2,A6,I1)
       DPAR=DPARIS(IIIS)
       GSHAPE=GSHAEIS(IIIS)
 C     GO TO 702
-  701 DO 609 I=2,NPD,2
-  609 BET(I)=BETIS(IIIS,I)
+      BET2SUM=0.d0
+  701 DO I=2,NPD,2
+         BET(I)=BETIS(IIIS,I)
+         BET2SUM=BET2SUM+BET(I)**2
+      END DO
+      RCORR=1.d0
+      IF(MERAD.EQ.1) RCORR=1.d0-BET2SUM*7.9577471546d-2 ! 1-bet2sum/(4*pi)
 C      BETB(MELEV)=BETBIS(IIIS,MELEV)
 C
   702 CONTINUE
@@ -103,14 +108,15 @@ C
 C     dtmp = DBLE(NINT(ATIS(IIIS)-ATIS(1)))
       dtmp = ATIS(IIIS)-ATIS(1)
       VRLA=VRG+CAVR*dtmp
-      RR=(RRG+CARR*dtmp)*ASQ
-      RC=RCG*ASQ
-      RD=(RDG+CARD*dtmp)*ASQ
-      RW=RWG*ASQ
-      RS=RSG*ASQ
-      RZ=RZG*ASQ 
+      RR=(RRG*RCORR+CARR*dtmp)*ASQ
+      RC=RCG*RCORR*ASQ
+      RD=(RDG*RCORR+CARD*dtmp)*ASQ
+      RW=RWG*RCORR*ASQ
+      RS=RSG*RCORR*ASQ
+      RZ=RZG*RCORR*ASQ 
       AR0=ARG+CAAR*dtmp
       AC0=ACG+CAAC*dtmp
+      
     
 C     PRINT 131, 'Thread ',TID,' VRG=',VRG,' RRG=',RRG,
 C    * ' RDG=',RDG,' ARG=',ARG,' ACG=',ACG,'  IIS=',IIS,' IIIS=',IIIS 
