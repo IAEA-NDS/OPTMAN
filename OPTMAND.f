@@ -716,7 +716,7 @@ C
       
       BET2SUM=0.d0
       DO I=2,NPD,2
-         BET(I)=BETIS(IIIS,I)
+         !BET(I)=BETIS(IIIS,I)
          BET2SUM=BET2SUM+BET(I)**2
       END DO
       RCORR=1.d0
