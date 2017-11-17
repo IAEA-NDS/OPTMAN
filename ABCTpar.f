@@ -87,7 +87,8 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
       
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
-          JU=NINT(DBLE(JO)/4.0)*2!ABS(-JBASE)
+          !!!JU=NINT(DBLE(JO)/4.0)*2!ABS(-JBASE)
+          JU=NINT(DBLE(JO-JO(1))/4.0)*2
           NTU=1
           NNB=0
           NNG=0
