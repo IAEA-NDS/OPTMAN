@@ -169,7 +169,7 @@ C     KODMA=KOD
       NUF=NMAX
       
       KEYAP=1
-C      CALL ANPOW                       NOT WORKING YET !!!!!
+      CALL ANPOW                       !NOT WORKING YET !!!!!
       IF(MEPRI.NE.98) THEN
       IF(MEPRI.LT.98) PRINT 300
       WRITE(21,300)
@@ -183,7 +183,7 @@ C      CALL ANPOW                       NOT WORKING YET !!!!!
       ENDIF
     
       KEYAP=2
-C      CALL ANPOW                          NOT WORKING YET !!!!!
+      CALL ANPOW                          !NOT WORKING YET !!!!!
 
       IF(MEPRI.NE.98) THEN
       IF(MEPRI.LT.98) PRINT 338
