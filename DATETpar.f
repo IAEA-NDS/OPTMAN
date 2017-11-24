@@ -185,7 +185,7 @@ C
           NUMBGS=NUMB(1)
            DO IID=1,NUR
              DO JJD=IID,NUR
-                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(IID).NE.NUMBGS)
+                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
      *                  EFFDEF(JJD,IID,:)=0.0
              END DO
            END DO          
