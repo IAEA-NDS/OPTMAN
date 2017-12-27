@@ -29,6 +29,7 @@ C     These common is used FOR initialization CCOULii <-> CCOUL
   
 
       COMMON/NIND/IIS
+      CHARACTER*8 PNAME
 !$OMP THREADPRIVATE(/NIND/)     
 
       INTEGER TID
@@ -38,6 +39,7 @@ C     These common is used FOR initialization CCOULii <-> CCOUL
 !$    TID = OMP_GET_THREAD_NUM()
 
 
+ 
       
       FUii   = 0.d0
       NNTTii = 0
@@ -63,6 +65,9 @@ C     write(*,*) 'Nuc.Index=',IIS,' AT=',NINT(ATIS(IIS))
 C---- Only two quantitites that depend on IIS (not IIIS) 
       EN=EEIS(IIS,IE)
       MECHA=MCHAIS(IIS,IE)
+      
+      PNAME='NEUTRONS'
+      IF(MECHA.NE.0) PNAME=' PROTONS'      
 C----
       WRITE (21,118) NINT(AT),NINT(ZNUC),EN
   118 FORMAT(//1X,'ADJUSTING TO EXPERIMENTAL DATA FOR NUCLEUS
@@ -447,10 +452,14 @@ C     FU=FU+((SRE(IIS,IE)-CSR)/DSR(IIS,IE))**2
       DISG(M)=0.D0
       DO 9 I=NUI,NUF
     9 DISG(M)=DISG(M)+DISC(I,M)
+      
+      
+      
       IF(KEYAP.EQ.0 .AND. MEPRI.LT.98) PRINT 100,
-     *                              TID,IIS,IE,EEIS(IIS,IE),KG,NUI,NUF
-      IF(KEYAP.EQ.0) WRITE (21,100) TID,IIS,IE,EEIS(IIS,IE),KG,NUI,NUF
-  100 FORMAT(/23X,'ANGULAR DISTRIBUTIONS OF SCATTERED PARTICLES'/
+     *                        PNAME,TID,IIS,IE,EEIS(IIS,IE),KG,NUI,NUF
+      IF(KEYAP.EQ.0) WRITE (21,100) 
+     *                        PNAME,TID,IIS,IE,EEIS(IIS,IE),KG,NUI,NUF
+  100 FORMAT(/23X,'ANGULAR DISTRIBUTIONS OF SCATTERED ',A8/
      *        19X,'THREAD ',I2,' IIS=',I2,' IE=',I2,' E=',F8.4,
      *            '  KG=',I2,' NUI=',I2,' NUF=',I2/)
       IF(KEYAP.EQ.0 .AND. MEPRI.LT.98) 
