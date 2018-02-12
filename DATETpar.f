@@ -189,7 +189,7 @@ C
       IF(MOD(JO(1),2).GT.0)  THEN
           NUMBGS=NUMB(1)
            DO IID=1,NUR
-             DO JJD=IID,NUR
+             DO JJD=1,NUR
                 IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
      *                  EFFDEF(JJD,IID,:)=0.0
              END DO

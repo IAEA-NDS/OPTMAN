@@ -6641,7 +6641,7 @@ c  620 CONTINUE
 
   627	continue		      
       
-      pause 333
+c      pause 333
 	RETURN
       END SUBROUTINE ANPOW
 C     *******************************************************

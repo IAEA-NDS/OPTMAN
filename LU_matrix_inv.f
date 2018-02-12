@@ -38,7 +38,7 @@ C     *******************************************************
 #ifdef LAPACK
       call ZGETRF(M,M,A_MAT,M,IPIV,info)
 #else
-      print *, 'non MKL'
+      !print *, 'non MKL'
 #endif
       
       if(info.ne.0) then

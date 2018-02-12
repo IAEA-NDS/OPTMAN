@@ -304,7 +304,7 @@ C           1-DEFORMATIONS OF NON-GS-BAND LEVELS ARE CALCULATED FROM SOFT-ROTATO
 C           2-DEFORMATIONS OF GS-BAND LEVELS AND NON-AXIAL BAND ARE FROM RIGID-ROTATOR MODEL      
 C@18  MEAXI 0-USES AXIAL WEIGHTS (NOT AFFECT "EFFECTIVE" DEFORMATIONS)
 C           1-USES NON-AXIAL WEIGHTS
-C     MERAD 0-TREAT R_i as CONSTANT
+C#19   MERAD 0-TREAT R_i as CONSTANT
 C           1-R_i CORRECTION DUE TO STATIC DEFORMATIONS (CONSTANT NUCLEAR DENSITY)      
 C      
 C
@@ -457,11 +457,13 @@ C
 
 
       II1=1
-      IF(MEHAM.GT.1.OR.MEDEF.GT.0.OR.MEAXI.EQ.1.OR.MEVOL.GT.0)      
-     * READ(20,2)HWIS(II1),AMB0IS(II1),AMG0IS(II1),
+      IF(MEHAM.GT.1.OR.MEDEF.GT.0.OR.MEAXI.EQ.1.OR.MEVOL.GT.0) THEN     
+      READ(20,2)HWIS(II1),AMB0IS(II1),AMG0IS(II1),
      *GAM0IS(II1),BET0IS(II1),BET4IS(II1),BB42IS(II1),GAMGIS(II1),
      *DELGIS(II1),BET3IS(II1),ETOIS(II1),AMUOIS(II1),HWOIS(II1),
      *BB32IS(II1),GAMDIS(II1),DPARIS(II1),GSHAEIS(II1)
+      IF(MEPRI.LT.98) PRINT *, "Hamiltonian parameters are read"          
+      END IF
 
  
 C=======================================================================
@@ -475,6 +477,7 @@ C                    NO MORE THAN NCMA
 C=======================================================================
 
            READ(20,211)NUR,NST,NPD,LAS,MTET,LLMA,NCMA,NSMA,KODMA
+           IF(MEPRI.LT.98) PRINT *, "NUR etc... are read"
            
   211 FORMAT(20I3)
       IF(LLMA.EQ.0.OR.LLMA.GT.89) LLMA=89
@@ -492,18 +495,24 @@ C=======================================================================
               ENDDO
             ELSE
              READ(20,2)(EE(I),I=1,NST)
+             IF(MEPRI.LT.98) PRINT *, "EE(I) ... are read"
              READ(20,1)(MCHAE(I),I=1,NST)                          
+             IF(MEPRI.LT.98) PRINT *, "MCHAE(I) ... are read"
             ENDIF
       IF(MTET.EQ.0) GO TO 13
-           READ(20,2)(TET(I),I=1,MTET)   
+           READ(20,2)(TET(I),I=1,MTET)
+           IF(MEPRI.LT.98) PRINT *, "Angles are read"
    13 IF(MEPOT.GT.1) GO TO 16
        
            READ(20,3)(ELC(I),JOC(I),NPOC(I),KOC(I),NCAC(I),
      *     NUMBC(I),BETBC(I),AGSIC(I),NTUC(I),NNBC(I),NNGC(I),
      *                 NNOC(I),I=1,NUR)
+           IF(MEPRI.LT.98) PRINT *, "ELC(I) etc... are read"
+           
         GO TO 117
-   16      READ(20,43)(ELC(I),JOC(I),NPOC(I), NTUC(I),NNBC(I),NNGC(I),
+   16   READ(20,43)(ELC(I),JOC(I),NPOC(I), NTUC(I),NNBC(I),NNGC(I),
      *                 NNOC(I),NCAC(I),I=1,NUR)
+        IF(MEPRI.LT.98) PRINT *, "ELC(I) etc... are read"
 C====================================================================
 C     VR=VR0+VR1*EN+VR2*EN*EN      AR=AR0+AR1*EN
 C===================================================================
@@ -516,12 +525,16 @@ C                AD=AD0+AD1+BNDC
 C====================================================================
         
   117 READ(20,211)NRESN
+      IF(MEPRI.LT.98) PRINT *, "NRESN is read"
+      
       IF(NRESN.EQ.0) GO TO 17      
            READ(20,213)(ERN(I),GNN(I),GREN(I),
      *         LON(I),JMN(I),JCON(I),NEL(10),I=1,NRESN)     
+           IF(MEPRI.LT.98) PRINT *, "ERN(I) etc... are read"
   213      FORMAT(3E12.6,4I3)  
 
    17      READ(20,2)ANEU,ASP,AT,ZNUC,EFERMN,EFERMP
+           IF(MEPRI.LT.98) PRINT *, "ANEU etc... are read"
            READ(20,2)VR0,VR1,VR2,VR3,VRLA,ALAVR,
      *               WD0,WD1,WDA1,WDBW,WDWID,ALAWD,
      *               WC0,WC1,WCA1,WCBW,WCWID,BNDC,
@@ -533,7 +546,7 @@ C====================================================================
      *               CISO,WCISO,WDISO,EA,WDSHI,WDWID2,
      *               ALFNEW,VRD,CAVR,CARR,CAAR,CARD,
      *               CAAC,ATI
-     
+           IF(MEPRI.LT.98) PRINT *, "Potential parameters are read"
      
       
 C      !!!!!!!!COMPARING WITH DATET YOU NEED TO INPUT ATI - REFERENCE NUCLEI NUMBER IN ABCT !!!!      
@@ -709,6 +722,7 @@ C
            IF(MEPOT.GT.1) GO TO 8
            IF(NPD.EQ.0) GO TO 8
            READ(20,2)(BET(I),I=2,NPD,2)
+           IF(MEPRI.LT.98) PRINT *, "BET(I) are read"
       IF(MEPRI.LT.98) PRINT 96,(I,BET(I),I=2,NPD,2)
       WRITE(21,96)(I,BET(I),I=2,NPD,2)
   96  FORMAT(6X,'NPD',5X,'DEFORMATION PARAMETER VALUES'/
