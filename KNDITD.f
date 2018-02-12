@@ -1358,7 +1358,7 @@ C    EFFECTIVE DEFORMATIONS OF OTHER BANDS
 c      IF(MEAXI.EQ.0) GO TO 777
 c      IF(MEDEF.EQ.0) GO TO 777
 
-      IF(JO(1)/2*2.NE.JO(1)) GO TO 777
+      !!!IF(JO(1)/2*2.NE.JO(1)) GO TO 777
   
       
        IF(L.GT.1 ) GO TO 88 
