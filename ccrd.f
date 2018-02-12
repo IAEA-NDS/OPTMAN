@@ -6393,17 +6393,26 @@ C     *******************************************************
 c	REAL*8 FC_R(150),FC_I(150),X_R(4,40,50,50,150),
 c     *       X_I(4,40,50,50,150),COEF_X(4),CSRX,CSIX,
 c     *       CS_ANG_MIF(40,50,50,150),CS_ANG(40,150)	           
-	REAL*8 FC_R,FC_I,X_R(4,40,50,50),
-     *       X_I(4,40,50,50),COEF_X(4),CSRX,CSIX,
+	REAL*8 FC_R,FC_I,!X_R(4,40,50,50),
+     *       !X_I(4,40,50,50),
+     *       COEF_X(4),CSRX,CSIX,
      *       CS_ANG_MIF(40,50,50),CS_ANG(40)	           
-       INTEGER MII_INDEX,MII,MII_MAX,MIF_INDEX,MIF,MIF_MAX
-
+       INTEGER MII_INDEX,MII,MII_MAX,MIF_INDEX,MIF,MIF_MAX,
+     *        error
+      REAL*8,allocatable,dimension(:,:,:,:) :: X_R,X_I
+      
      	!----analyzing power---------
       INCLUDE 'PRIVCOM.FOR'
       INCLUDE 'PRIVCOM1.FOR'
       INCLUDE 'PRIVCOM13.FOR'
       INCLUDE 'PRIVCOM14.FOR'           
  
+      allocate(X_R(4,40,50,50),X_I(4,40,50,50),stat=error)
+      if (error.ne.0)then
+        print *,"!!!!!!!!!!!!!error:not enough memory"
+        stop
+      end if
+      
     	!----------initialization----------
 	X_R=0.D0
 	X_I=0.D0
@@ -6642,6 +6651,11 @@ c  620 CONTINUE
   627	continue		      
       
 c      pause 333
+      deallocate(X_R,X_I,stat=error)
+      if (error.ne.0)then
+        print *,"!!!!!!!!!!!!!!!!!!!error:fail to release memory"
+        stop
+      end if   
 	RETURN
       END SUBROUTINE ANPOW
 C     *******************************************************
