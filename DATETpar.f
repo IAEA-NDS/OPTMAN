@@ -5,7 +5,7 @@
       INTEGER NNTTii,MEISii,IIS,IIIS
       REAL*8 FUii,FUU
       CHARACTER*1 cpar
-      DIMENSION JTEMP(40)
+      DIMENSION JTEMP(40), JBASE(40)
 C---------------------------------
 C     These commons are also used and initialized in ABCT 
       INCLUDE 'PRIVCOM10.FOR'
@@ -139,7 +139,9 @@ C
       NURC=0
 
        IF(MEPOT.GT.1) GO TO 638
-
+      
+      JBASE=JO(1) 
+       
       DO 601 I=1, NUR
       IF(MECHA.EQ.0.AND. NCAIS(IIIS,I).NE.NCAIS(IIIS,1)) GO TO 601
       NURC=NURC+1
@@ -160,6 +162,7 @@ C
       ES(NURC)=EL(NURC) 
       JU(NURC)=JO(NURC)/2
       NPI(NURC)=NPO(NURC)
+      IF (NNO(NURC).EQ.1) JBASE(NURC)=JBASE(NURC)+1
   601 CONTINUE
       NUR=NURC
  
@@ -168,12 +171,8 @@ C
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
           !JU=NINT(DBLE(JO)/4.0)*2!-JBASE
-          JU=NINT(DBLE(JO-JO(1))/4.0)*2
-          NTU=1
-          NNB=0
-          NNG=0
-          NNO=0
-          NPI=1
+          JU=NINT(DBLE(JO-JBASE)/4.0)*2 ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
+          !!! ABNORMAL BAND SHOULD BE ASSIGNED SEPARATELY!!!
       END IF
       
       EFFDEF=0.d0
@@ -186,16 +185,16 @@ C
        END DO
 
        
-      IF(MOD(JO(1),2).GT.0)  THEN
-          NUMBGS=NUMB(1)
-           DO IID=1,NUR
-             DO JJD=1,NUR
-                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
-     *                  EFFDEF(JJD,IID,:)=0.0
-             END DO
-           END DO          
-          JU=JTEMP
-      END IF
+c      IF(MOD(JO(1),2).GT.0)  THEN
+c          NUMBGS=NUMB(1)
+c           DO IID=1,NUR
+c             DO JJD=1,NUR
+c                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
+c     *                  EFFDEF(JJD,IID,:)=0.0
+c             END DO
+c           END DO          
+c          JU=JTEMP
+c      END IF
        
       DEFNUL=0.D0
       DEFNUL=SUM(EFFDEF*EFFDEF)     

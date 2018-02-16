@@ -4,7 +4,7 @@
       INTEGER IIparal
 
       CHARACTER*1  cpar
-      DIMENSION JTEMP(40)
+      DIMENSION JTEMP(40),JBASE(40)
       LOGICAL EMPIRE
       CHARACTER*20 fname 
       COMMON/INOUT/fname,EMPIRE
@@ -64,6 +64,9 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
        DPAR=DPARIS(1)
       GSHAPE=GSHAEIS(1)
       IF(MEPOT.GT.1) GO TO 638
+      
+      JBASE=JO(1)
+      
       DO 601 I=1, NUR
       IF(MECHA.EQ.0.AND. NCAC(I).NE.NCAC(1)) GO TO 601
       NURC=NURC+1
@@ -82,7 +85,7 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
       ES(NURC)=EL(NURC) 
       JU(NURC)=JO(NURC)/2
       NPI(NURC)=NPO(NURC)
-
+      IF (NNO(NURC).EQ.1) JBASE(NURC)=JBASE(NURC)+1
   601 CONTINUE
       NUR=NURC
       
@@ -90,14 +93,10 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
       
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
-          !!!JU=NINT(DBLE(JO)/4.0)*2!ABS(-JBASE)
-          JU=NINT(DBLE(JO-JO(1))/4.0)*2
-          NTU=1
-          NNB=0
-          NNG=0
-          NNO=0
-          NPI=1
-      END IF      
+          !JU=NINT(DBLE(JO)/4.0)*2!-JBASE
+          JU=NINT(DBLE(JO-JBASE)/4.0)*2 ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
+          !!! ABNORMAL BAND SHOULD BE ASSIGNED SEPARATELY!!!
+      END IF     
             
       EFFDEF=0.d0
       IF(MEDEF.GT.0.OR.MEAXI.EQ.1.OR.MEVOL.EQ.1) CALL OVLOPT
@@ -109,16 +108,16 @@ C             EFFDIS(IIS,IID,JJD,:)=EFFDEF(IID,JJD,:)
          END DO
        END DO
 
-      IF(MOD(JO(1),2).GT.0)  THEN
-          NUMBGS=NUMB(1)
-           DO IID=1,NUR
-             DO JJD=1,NUR
-                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
-     *                  EFFDEF(JJD,IID,:)=0.0
-             END DO
-           END DO          
-          JU=JTEMP
-      END IF         
+c      IF(MOD(JO(1),2).GT.0)  THEN
+c          NUMBGS=NUMB(1)
+c           DO IID=1,NUR
+c             DO JJD=1,NUR
+c                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
+c     *                  EFFDEF(JJD,IID,:)=0.0
+c             END DO
+c           END DO          
+c          JU=JTEMP
+c      END IF         
   
       GO TO 639
   638 DO 602 I=1, NUR
