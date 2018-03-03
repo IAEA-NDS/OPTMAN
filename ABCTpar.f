@@ -4,7 +4,7 @@
       INTEGER IIparal
 
       CHARACTER*1  cpar
-      DIMENSION JTEMP(40),JBASE(40)
+      DIMENSION JTEMP(40),JSHIFT(40)
       LOGICAL EMPIRE
       CHARACTER*20 fname 
       COMMON/INOUT/fname,EMPIRE
@@ -85,7 +85,7 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
       ES(NURC)=EL(NURC) 
       JU(NURC)=JO(NURC)/2
       NPI(NURC)=NPO(NURC)
-      IF (NNO(NURC).EQ.1) JBASE(NURC)=JBASE(NURC)+1
+      IF (NNO(NURC).EQ.1) JSHIFT(NURC)=1
   601 CONTINUE
       NUR=NURC
       
@@ -94,7 +94,7 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
           !JU=NINT(DBLE(JO)/4.0)*2!-JBASE
-          JU=NINT(DBLE(JO-JBASE)/4.0)*2 ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
+          JU=NINT(DBLE(JO-JO(1))/4.0)*2 ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
           !!! ABNORMAL BAND SHOULD BE ASSIGNED SEPARATELY!!!
       END IF     
             
@@ -108,7 +108,7 @@ C             EFFDIS(IIS,IID,JJD,:)=EFFDEF(IID,JJD,:)
          END DO
        END DO
 
-c      IF(MOD(JO(1),2).GT.0)  THEN
+      IF(MOD(JO(1),2).GT.0)  THEN
 c          NUMBGS=NUMB(1)
 c           DO IID=1,NUR
 c             DO JJD=1,NUR
@@ -116,8 +116,8 @@ c                IF(NUMB(IID).NE.NUMBGS.OR.NUMB(JJD).NE.NUMBGS)
 c     *                  EFFDEF(JJD,IID,:)=0.0
 c             END DO
 c           END DO          
-c          JU=JTEMP
-c      END IF         
+          JU=JTEMP
+      END IF         
   
       GO TO 639
   638 DO 602 I=1, NUR
