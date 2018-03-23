@@ -2000,6 +2000,9 @@ c             matrix elements calculations
               NNT=1
               CALL OVLAB
               FOLAB1=FOLAR ! <b1|b/b0|b2>
+              NNT=2
+              CALL OVLAB
+              FOLAB2=FOLAR ! <b1|(b/b0)^2|b2>
               NNT=0
               CALL OVLAB
               FOLAB0=FOLAR ! <b1|b2>
@@ -2069,28 +2072,35 @@ c             matrix elements calculations
               ELSE
                 DTT2=0.D0
               END IF
-  
-              IF (PO1.eq.PO2) THEN
-               DBETEFF=(FOLAB1-FOLAB0)*FOLAG0
-               GAMEFF=DTT2*(FOLAG1+GAM0*FOLAG0)*FOLAB0 !FOLAG15*FOLAB0!
-               GAM2EFF=DTT2*(FOLAG2+2*GAM0*FOLAG1+GAM0**2*FOLAG0)*FOLAB0        !FOLAG16*FOLAB0!
-               BET3EFF=0
-              ELSE 
-                DBETEFF=0
-                GAMEFF=0
-                GAM2EFF=0
-                BET3EFF=BET3/DSQRT(1-DEXP(-2*BET3**2/AMUO**2))
-              END IF
               
-              IF (II.EQ.JJ) THEN
-                BET3SQ=AMUO**2/2.D0+
-     *                 BET3**2/(1+PO1*DEXP(-BET3**2/AMUO**2))
+              IF (PO1.eq.PO2) THEN
+                  DB3=1.D0
               ELSE
-                BET3SQ=0  
+                  DB3=0.D0
               END IF
+  
+               DBETEFF=(FOLAB1-FOLAB0)*FOLAG0*DB3
+               GAMEFF=DTT2*(FOLAG1+GAM0*FOLAG0)*FOLAB0*DB3 !FOLAG15*FOLAB0!
+               GAM2EFF=DTT2*(FOLAG2+2*GAM0*FOLAG1+GAM0**2*FOLAG0)*FOLAB0
+     *                   *DB3!FOLAG16*FOLAB0!
+               BET3EFF=
+     *          BET3/DSQRT(1-DEXP(-2*BET3**2/AMUO**2))*
+     *          FOLAB0*FOLAG0*
+     *           (1-DB3)
+              
+
+               BET2SQ=(FOLAB2-2*FOLAB1+FOLAB0)*FOLAG0*DB3
+               
+               BET3SQ=(AMUO**2/2.D0+
+     *            BET3**2/(1+PO1*DEXP(-BET3**2/AMUO**2)))*
+     *                FOLAB0*FOLAG0*
+     *                DB3
+               
+               !IF(II.ne.JJ)BET3SQ=0.D0
        
-      EFFDEF(II,JJ,1:6) = (/DBETEFF,GAM2EFF/2,GAMEFF/1.41421356237309D0,
-     *  BET3EFF*DCOS(ETO),BET3EFF*DSIN(ETO)/1.41421356237309D0,BET3SQ/)
+      EFFDEF(II,JJ,1:7) = (/DBETEFF,GAM2EFF/2,GAMEFF/1.41421356237309D0,
+     *  BET3EFF*DCOS(ETO),BET3EFF*DSIN(ETO)/1.41421356237309D0,
+     *  BET3SQ,BET3SQ/)
     
               END DO
           END DO
@@ -2122,7 +2132,7 @@ c     */AA/ANO(40)
       COMMON/FILENAME/OUTNAME
       COMMON/GAMCOR/GAMMAT,GAMMAT2,ITAU2,NROOT2,NGAM!GAMMAT=<ITAU,NROOT|d^nT/dg^n*g^NGAM|ITAU2,NROOT2>
       
-      COMMON/EFFD/EFFDEF(40,40,6)
+      COMMON/EFFD/EFFDEF(40,40,7)
       
       CHARACTER*256 OUTNAME
       CHARACTER*256 DEFOUTFILE
@@ -2196,6 +2206,9 @@ c             matrix elements calculations
               NNT=1
               CALL OVLAB
               FOLAB1=FOLAR ! <b1|b/b0|b2>
+              NNT=2
+              CALL OVLAB
+              FOLAB2=FOLAR ! <b1|(b/b0)^2|b2>
               NNT=0
               CALL OVLAB
               FOLAB0=FOLAR ! <b1|b2>
@@ -2261,29 +2274,35 @@ c             matrix elements calculations
               !FOLAG1=FOLAG1*(1+(-1)**(KAA/2+KAA2/2))/2
               !FOLAG2=FOLAG2*(1+(-1)**(KAA/2+KAA2/2))/2
               IF (ITAU.EQ.ITAU2) THEN
-                DTT2=1
+                DTT2=1.D0
               ELSE
-                DTT2=0
-              END IF
-  
-              IF (PO1.eq.PO2) THEN
-               DBETEFF=(FOLAB1-FOLAB0)*FOLAG0
-               GAMEFF=DTT2*(FOLAG1+GAM0*FOLAG0)*FOLAB0 !FOLAG15*FOLAB0!
-               GAM2EFF=DTT2*(FOLAG2+2*GAM0*FOLAG1+GAM0**2*FOLAG0)*FOLAB0        !FOLAG16*FOLAB0!
-               BET3EFF=0
-              ELSE 
-                DBETEFF=0
-                GAMEFF=0
-                GAM2EFF=0
-                BET3EFF=BET3/DSQRT(1-DEXP(-2*BET3**2/AMUO**2))
+                DTT2=0.D0
               END IF
               
-              IF (II.EQ.JJ) THEN
-                BET3SQ=AMUO**2/2.D0+
-     *                 BET3**2/(1+PO1*DEXP(-BET3**2/AMUO**2))
+              IF (PO1.eq.PO2) THEN
+                  DB3=1.D0
               ELSE
-                BET3SQ=0  
+                  DB3=0.D0
               END IF
+  
+               DBETEFF=(FOLAB1-FOLAB0)*FOLAG0*DB3
+               GAMEFF=DTT2*(FOLAG1+GAM0*FOLAG0)*FOLAB0*DB3 !FOLAG15*FOLAB0!
+               GAM2EFF=DTT2*(FOLAG2+2*GAM0*FOLAG1+GAM0**2*FOLAG0)*FOLAB0
+     *                   *DB3!FOLAG16*FOLAB0!
+               BET3EFF=
+     *          BET3/DSQRT(1-DEXP(-2*BET3**2/AMUO**2))*
+     *          FOLAB0*FOLAG0*
+     *           (1-DB3)
+              
+
+               BET2SQ=(FOLAB2-2*FOLAB1+FOLAB0)*FOLAG0*DB3
+               
+               BET3SQ=(AMUO**2/2.D0+
+     *            BET3**2/(1+PO1*DEXP(-BET3**2/AMUO**2)))*
+     *                FOLAB0*FOLAG0*
+     *                DB3
+               
+               !IF(II.ne.JJ)BET3SQ=0.D0
        WRITE(*,
      * "(I2,I1,I1,I1,I1,I3,I1,I1,I1,I1,
      *  12D14.6)")
