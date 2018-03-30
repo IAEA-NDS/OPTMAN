@@ -2098,9 +2098,9 @@ c             matrix elements calculations
                
                !IF(II.ne.JJ)BET3SQ=0.D0
        
-      EFFDEF(II,JJ,1:7) = (/DBETEFF,GAM2EFF/2,GAMEFF/1.41421356237309D0,
+      EFFDEF(II,JJ,1:8) = (/DBETEFF,GAM2EFF/2,GAMEFF/1.41421356237309D0,
      *  BET3EFF*DCOS(ETO),BET3EFF*DSIN(ETO)/1.41421356237309D0,
-     *  BET3SQ,BET3SQ/)
+     *  BET3SQ,BET2SQ,FOLAB0-1.d0/)
     
               END DO
           END DO

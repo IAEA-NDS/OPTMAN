@@ -8,7 +8,7 @@ C     Weights and effective deformations
 
 C     C     FROM SUBROUTINE KNDITD        
       COMMON/WEIGHT/NKIWE(40),KWE(16,40),WEIGH(16,40)
-      COMMON/EFFD/EFFDEF(40,40,7),DEFNUL
+      COMMON/EFFD/EFFDEF(40,40,8),DEFNUL
       
 !$OMP THREADPRIVATE(/WEIGHT/,/EFFD/) 
       
