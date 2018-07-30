@@ -4186,8 +4186,14 @@ CCHA      DVSO=DOM_INT_WV(Eferm,EPAVER,WSBW,WSWID,INT(PDIS),EN+CDE,dtmp)
  
 CCHA      WSO=WS0+WS1*ENEF+WSBW*(ENEF+CDE)**PDIS/
 CCHA     *((ENEF+CDE)**PDIS+WSWID**PDIS)
-      IF(MECUL.EQ.3) ENESO=ENEF+CDE
-       WSO=WS0+WS1*ENESO+WSBW*(ENESO)**PDIS/
+      
+C     Corrected by DMart July 2018 (bug lasts since version 15)
+      ENESO=ENEF
+C      IF(MECUL.EQ.3) ENESO=ENEF+CDE
+      IF(MECUL.EQ.3) ENESO=ENESO+CDE
+C     Corrected by DMart July 2018
+      
+      WSO=WS0+WS1*ENESO+WSBW*(ENESO)**PDIS/
      *((ENESO)**PDIS+WSWID**PDIS)    
 C     WD=WD+WISO
       IF(WD.LE.0.)WD=0.
