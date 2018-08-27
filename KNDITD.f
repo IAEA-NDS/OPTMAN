@@ -1180,11 +1180,7 @@ C       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK)
 
       JD=JO2
       JPS=JSS-1-JO2+J1+J2+LN2-LN1
-      JPS=JPS-JPS/4*4
-      IF(JPS.NE.0) GO TO 6
-      CCC=CC
-      GO TO 8
-    6 CCC=-CC
+      CCC=CC*(-1)**(JPS/2)
     8 DO 9 L=1,LAS2
     
       LL2=K2+L 
@@ -1411,7 +1407,7 @@ C  88  CVNR(LL2)=CVNR(LL2)*SCALE
       
 
 
-      
+
 C     NECESSARY TO DIVIDE BY SIN(GAMMA)/SQRT(2.)!!! for actinides
             
 C 144  IF(KO1.EQ.4.AND.KO2.EQ.4) CVNR(LL2)=CVNR(LL2)/0.1D0                 !!!!!!
@@ -1436,11 +1432,7 @@ C 144  IF(KO1.EQ.4.AND.KO2.EQ.4) CVNR(LL2)=CVNR(LL2)/0.1D0                 !!!!!
       JO2=JO(NU1)
       JD=JO2
       JPS=JSS-1-JO2+J1+J2+LN2-LN1
-      JPS=JPS-JPS/4*4
-      IF(JPS.NE.0) GO TO 102
-      CCC=CC
-      GO TO 21
-  102 CCC=-CC       
+      CCC=CC*(-1)**(JPS/2)
    21 M1=-1
       M2=1
       LAM=0
