@@ -62,7 +62,7 @@ C     *******************************************************
 
 
       LLMA1=LLMA+1
-      LMA2=0.5252113*SQRT(VR*WW)*RR+4.D+0
+      LMA2=0.5252113*SQRT(VR*WW)*RR+8.D+0
       LMA1=1.65*(WNK(1)*RK+1.83)+4.D+0
       IF(LMA1.GT.LLMA1) LMA1=LLMA1
       DO 1 I=1,NUR
@@ -608,7 +608,7 @@ C     NSPI=IDINT(ASP*2+0.001)
       IF(MEREL.EQ.1.OR.MEREL.EQ.3) WW=WW*RELPOT
 
 
-      LMA2=0.5252113*SQRT(VR*WW)*RR+4.D+0
+      LMA2=0.5252113*SQRT(VR*WW)*RR+8.D+0
       IF(MEPRI.GE.10 .AND. MEPRI.LT.98) 
      *  PRINT 18,RK,WW,WNK(1),LMA2,LMAX
       IF(MEPRI.GE.10 .AND. MEPRI.LT.98) 
