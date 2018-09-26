@@ -1226,15 +1226,13 @@ C      SUMMING BY K AND K' BY WEIGHTS AIT
 
 C     COUPLING FOR EVEN-EVEN NUCLIDES
 C     NON-AXIAL BAND LEVELS
-      GO TO 145
+      !GO TO 145
       
 C     LAST JOSES'S FORMULAS
       MUBAND=IABS(KO2-KO1)
-      MUBAND=4
-      IF(MUBAND.GT.6) GO TO 140     
-      IF(MUBAND.EQ.0) PAUSE 11
+      IF(MUBAND.GT.4) GO TO 140     
 
-
+      
       J1=JO2
       J2=2*LAM
       J=JO1
@@ -1245,15 +1243,20 @@ C     LAST JOSES'S FORMULAS
       AKGS=AKG
       M1=-KO2
       CALL KLEGO
-      AKGS=AKGS+(-1)**(JO2/2+NPO(NU1))*AKG
+      AKGS=AKGS+(-1)**(JO2/2)*NPO(NU1)*AKG
       M=-KO1
       CALL KLEGO
-      AKGS=AKGS+(-1)**((JO1+JO2)/2+NPO(NU)+NPO(NU1))*AKG 
-      M=KO2
+      AKGS=AKGS+(-1)**((JO1+JO2)/2)*NPO(NU)*NPO(NU1)*AKG 
+      M1=KO2
       CALL KLEGO
-      AKGS=AKGS+(-1)**(JO1/2+NPO(NU))*AKG
+      AKGS=AKGS+(-1)**(JO1/2)*NPO(NU)*AKG
       
-      AKG=AKGS*SQRT(J1+1.D0)/2.D0
+      AKG=AKGS*SQRT(J1+1.D0)!/SQ2!2.D0
+
+      IF(KO1.EQ.0.OR.KO2.EQ.0)THEN
+          AKG=AKG/SQ2
+      ENDIF
+      
       GO TO 129
  
       
@@ -1279,6 +1282,10 @@ C     OLD JOSE FORMULA  FOR EVEN-EVEN CASE
       CALL KLEGO
       AKG=AKG*SQRT(J1+1.D0)*(-1.D0)**(J1/2)       
  
+      IF(KO1.EQ.0.OR.KO2.EQ.0)THEN
+          AKG=AKG/SQ2
+      ENDIF      
+      
       GO TO 129
       
          
@@ -1292,6 +1299,10 @@ C     OLD JOSE FORMULA  FOR EVEN-EVEN CASE
       CALL KLEGO
       AKG=AKG*SQRT(J1+1.D0)
          
+      IF(KO1.EQ.0.OR.KO2.EQ.0)THEN
+          AKG=AKG/SQ2
+      ENDIF
+      
       GO TO 129   
 C     END JOSES'S FORMULAS FOR EVEN-EVEN CASE
 
@@ -1303,15 +1314,16 @@ C      IF(KO1.EQ.KO(1).OR.KO2.EQ.KO(1))  GO TO 201
       
 C     GO TO 140
   201 CONTINUE
-      MUBAND=IABS(KO(1)-KO1)
-      IF(KO(1)-KO1.EQ.0) MUBAND=IABS(KO(1)-KO2)
+      !MUBAND=IABS(KO(1)-KO1)
+      !IF(KO(1)-KO1.EQ.0) MUBAND=IABS(KO(1)-KO2)
 C     IF(MUBAND.EQ.2.OR.MUBAND.GT.6) GO TO 140
-      MUBAND=4
+      !MUBAND=4
+      MUBAND=IABS(KO2-KO1)
       IF(MUBAND.GT.4) GO TO 140     
-      IF(MUBAND.EQ.0) PAUSE 11
-      J1=JN2
+      !IF(MUBAND.EQ.0) PAUSE 11
+      J1=JO2
       J2=2*LAM
-      J=JN1
+      J=JO1
       M1=KO2
       M2=MUBAND
       M=KO1
@@ -1321,15 +1333,15 @@ C     IF(MUBAND.EQ.2.OR.MUBAND.GT.6) GO TO 140
       CALL KLEGO
 C     BUG RCN 19 June 2014
 C     AKGS=AKGS+(-1)**((J02-1)/2)*AKG
-      AKGS=AKGS+(-1)**((JO2-1)/2+NPO(NU1))*AKG
+      AKGS=AKGS+(-1)**((JO2-1)/2)*NPO(NU1)*AKG
       M=-KO1
       CALL KLEGO
-      AKGS=AKGS+(-1)**((JO1+JO2)/2-1+NPO(NU)+NPO(NU1))*AKG 
-      M=KO2
+      AKGS=AKGS+(-1)**((JO1+JO2)/2-1)*NPO(NU)*NPO(NU1)*AKG 
+      M1=KO2
       CALL KLEGO
-      AKGS=AKGS+(-1)**((JO1-1)/2+NPO(NU))*AKG
+      AKGS=AKGS+(-1)**((JO1-1)/2)*NPO(NU)*AKG
       
-      AKG=AKGS*SQRT(J1+1.D0)/2.D0
+      AKG=AKGS*SQRT(J1+1.D0)!/2.D0  CHECK 1+(-1)^(lambda)*pi*pi'=1!!!!
       GO TO 129
  
       
