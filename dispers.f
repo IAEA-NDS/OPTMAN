@@ -15,6 +15,10 @@ C             Phys. Rev. C67(2003) 067601
 C
 C     Dispersive integral's derivatives calculated by Dr.J.M.Quesada
 C
+C     Nonlocal dispersive contribution DOM_INT_T2 for positive 
+C     non-symmetric Wv corrected following Phys. Rev. C94(2016) 064605
+C     (November 2018)
+C
       DOUBLE PRECISION FUNCTION DOM_INT_Wv
      >    (Ef,Ep,Av,Bv,n,Einc,DerivIntWv)
 C
@@ -234,6 +238,9 @@ C
 C
 C     Integral over E' corresponding to nonlocal additions T2(E'>>0)
 C
+C     Following Eq.(24) PRC94(2016)064605 
+C     (CPC equation (20) contains typos !!)
+C
       IMPLICIT NONE
       DOUBLE PRECISION E,Ea,Ef,EL,Pi
 
@@ -254,21 +261,28 @@ C
       DOM_int_T2 = DOM_int_T2 + 1.d0/Pi*1.5d0*sqrt(EL)
      > *log((2**(4.d0/3.d0)*EL)/Ea)
 
-      ELSEIF(E.GT.0.d0 .AND. E.LE.EL) THEN
+C     ELSEIF(E.GT.0.d0 .AND. E.LE.EL) THEN
+      ELSEIF(E.GT.0.d0 .AND. E.LT.EL) THEN
 
       DOM_int_T2 = DOM_int_T2 + 1.d0/Pi * (
-     > sqrt(e) * log( (sqrt(E)+sqrt(EL)) / (sqrt(EL)-sqrt(E)) ) +
+     > sqrt(E) * log( (sqrt(E)+sqrt(EL)) / (sqrt(EL)-sqrt(E)) ) +
      > 1.5d0*sqrt(EL)*log((EL-E)/Ea)+EL**1.5d0/(2.d0*E)*log(EL/(EL-E)) )
 
       ELSEIF(E.EQ.0.d0) THEN
 
-      DOM_int_T2 = DOM_int_T2 + 1.d0/Pi*( 0.5*EL**(1./3.)
-     > + log(EL/Ea) + 0.5d0*sqrt(EL) )
+C     CPC (wrong) formula 
+C     DOM_int_T2 = DOM_int_T2 + 1.d0/Pi*( 0.5*EL**(1./3.)
+C    > + log(EL/Ea) + 0.5d0*sqrt(EL) )
 
-      ELSE
+C     PRC94(2016)064605
+      DOM_int_T2 = DOM_int_T2 + 1.d0/Pi*(1.5d0*sqrt(EL)
+     > *log(EL/Ea)+0.5d0*sqrt(EL))
 
+      ELSE ! E<0
+
+C     PRC94(2016)064605
       DOM_int_T2 = DOM_int_T2 + 1.d0/Pi * (
-     > -sqrt(abs(E))*atan( 2*(sqrt(EL-abs(E))) / (EL-abs(E)) ) +
+     > -sqrt(abs(E))*atan( 2*sqrt(EL*abs(E)) / (EL-abs(E)) ) +
      > 1.5d0*sqrt(EL)*log((EL-E)/Ea)+EL**1.5d0/(2.d0*E)*log(EL/(EL-E)) )
 
       ENDIF
