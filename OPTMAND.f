@@ -1536,7 +1536,12 @@ C     *******************************************************
       INCLUDE 'PRIVCOM17D.FOR'  
 C     COMMON/OPT/XAD(25),GR(25),XAD1(25),XAD2(25),EP(25),EPSGR(25),NV
 C     COMMON/OPB/C,GRR(25),FM,EPS1,NRL
-
+      !DOUBLE PRECISION SCUR(25),SPREV(25),GRPREV(25),OMEGA
+      
+      !SCUR=0.0
+      !SPREV=0.0
+      !GRPREV=0.0
+      !GR=0.0
       
       NCC=1
       NI=0
@@ -1560,7 +1565,20 @@ C     COMMON/OPB/C,GRR(25),FM,EPS1,NRL
       IF(DABS(XAD2(I)-XAD1(I)).LE.DABS(EP(I))) NXX=NXX+1
    21 CONTINUE
       IF(NXX.EQ.NV)GO TO 9
+      
+      !GRPREV=GR
+     
       CALL DEFGT
+      
+      !SPREV=SCUR
+      !IF(SUM(GRPREV*GRPREV).GT.0) THEN
+      !   OMEGA=MAX(0.0,SUM((GR-GRPREV)*GR)/SUM(GRPREV*GRPREV))
+      !ELSE
+      !    OMEGA=0.0
+      !ENDIF   
+      !SCUR=GR+OMEGA*SPREV
+
+      
       LL=0
       NNK=0
       DO 13 I=1,NV
@@ -1568,18 +1586,19 @@ C     COMMON/OPB/C,GRR(25),FM,EPS1,NRL
       NI=NI+1
       C=0.
       DO 7 I=1,NV
-      GRR(I)=GR(I)
-    7 C=C+GRR(I)**2
+      GRR(I)=GR(I)!SCUR(I)!
+    7 C=C+GRR(I)**2*(300*EP(I))**2
+      !C=SUM(SCUR*GR*(300*EP)**2)
       EPS1=FM/C
     8 NX=0
       DO 30 I=1,NV
-      EPSGR(I)=EPS1*GRR(I)
+      EPSGR(I)=EPS1*GRR(I)*(300*EP(I))**2
       IF(DABS(EPSGR(I)).GT.0.3D0*DABS(XAD1(I))) GO TO 15
       IF(DABS(EPSGR(I)).LE.DABS(EP(I))) NX=NX+1
    30 CONTINUE
       IF(NNK.EQ.0) NX=0
    17 DO 2 I=1,NV
-      HS=EPS1*GRR(I)
+      HS=EPS1*GRR(I)*(300*EP(I))**2
       HS1=XAD1(I)
       XAD(I)=HS1-HS
     2 CONTINUE
@@ -1633,15 +1652,18 @@ C     *******************************************************
 C      COMMON/OPT/XAD(25),GR(25),XAD1(25),XAD2(25),EP(25),EPSGR(25),NV
 C      COMMON/OPB/C,GRR(25),FM,EPS1,NRL
 C      COMMON/CHISQC/FU
+      DIMENSION TEMPAD(25)
       F1=FU
       DO I=1,NV
       DL=EP(I)
+      TEMPAD(I)=XAD(I)
       XAD(I)=XAD(I)+DL
 C     write(*,*) 'XAD(i)=',i,XAD(i) 
       CALL XISQT
 C     write(*,*) 'XAD(i)=',i,XAD(i) 
       GR(I)=(FU-F1)/DL
-      XAD(I)=XAD(I)-DL
+      !XAD(I)=XAD(I)-DL
+      XAD(I)=TEMPAD(I)
       ENDDO
       RETURN
       END
