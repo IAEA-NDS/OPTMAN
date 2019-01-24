@@ -545,7 +545,7 @@ C====================================================================
      *               RZ,RZBWC,RZWID,AZ,CCOUL,ALF,
      *               CISO,WCISO,WDISO,EA,WDSHI,WDWID2,
      *               ALFNEW,VRD,CAVR,CARR,CAAR,CARD,
-     *               CAAC,ATI
+     *               CAAC,ATI,CAWD,CAWDW
            IF(MEPRI.LT.98) PRINT *, "Potential parameters are read"
      
       
@@ -754,11 +754,15 @@ C
       RR=(RR*RCORR+CARR*(AT-ATI))*ASQ
       RC=RC*RCORR*ASQ
       RD=(RD*RCORR+CARD*(AT-ATI))*ASQ
+      !RD=RD*RCORR*ASQ
       RW=RW*RCORR*ASQ
       RS=RS*RCORR*ASQ
       RZ=RZ*RCORR*ASQ       
       AR0=AR0+CAAR*(AT-ATI)
       AC0=AC0+CAAC*(AT-ATI)
+      
+      WDBW=WDBW+CAWD*(AT-ATI)
+      WDWID=WDWID+CAWDW*(AT-ATI)
 
 !$OMP PARALLEL PRIVATE(IIparal,TID) 
 !$OMP*  COPYIN(/MENU/)                                  ! PRIVCOM10
@@ -919,7 +923,7 @@ C====================================================================
      *               RZ,RZBWC,RZWID,AZ,CCOULii,ALF,
      *               CISO,WCISO,WDISO,EA,WDSHI,WDWID2,
      *               ALFNEW,VRD,CAVR,CARR,CAAR,CARD,
-     *               CAAC 
+     *               CAAC,ABASE,CAWD,CAWDW
          PRINT *, "Potential params are read"
       IF(MEPRI.LT.98) 
      * PRINT 500,   ASP,(NINT(ATIS(I)),NINT(ZNUCIS(I)),I=1,MENUC)
@@ -1225,16 +1229,19 @@ C     Storing READ values INTO new VARIABLES (RR -> RRi)
       VRG=VRLAi
       ARG=AR0i
       ACG=AC0i
+      
+      WDBWG=WDBWi
+      WDWIDG=WDWIDi
 
-      READ(20,112)(NPJ(I),I=1,75)
+      READ(20,112)(NPJ(I),I=1,77)
       PRINT *, "NPJ(I) etc... are read"
       IF(MEPRI.LT.98) PRINT 99
       WRITE (21,99)
 
       WRITE (21,99)
    99 FORMAT(/10X,'PARAMETERS ADJUSTED'/)
-      IF(MEPRI.LT.98) PRINT 111,(NPJ(I),I=1,75)
-      WRITE(21,111)(NPJ(I),I=1,75)
+      IF(MEPRI.LT.98) PRINT 111,(NPJ(I),I=1,77)
+      WRITE(21,111)(NPJ(I),I=1,77)
   111 FORMAT(1X,6I2)
   112 FORMAT(6I2)
       DO 4 IIS=1,MENUC
@@ -1322,10 +1329,10 @@ C     Storing READ values INTO new VARIABLES (RR -> RRi)
       XAD(KEV)=WDA1
    19 IF(NPJ(10).NE.1) GO TO 20
       KEV=KEV+1
-      XAD(KEV)=WDBW
+      XAD(KEV)=WDBWG
    20 IF(NPJ(11).NE.1) GO TO 21
       KEV=KEV+1
-      XAD(KEV)=WDWID
+      XAD(KEV)=WDWIDG
    21 IF(NPJ(12).NE.1) GO TO 22
       KEV=KEV+1
       XAD(KEV)=ALAWD
@@ -1515,9 +1522,15 @@ C     Storing READ values INTO new VARIABLES (RR -> RRi)
   759 IF(NPJ(74).NE.1) GO TO 760
       KEV=KEV+1
       XAD(KEV)=ABS(GAM0IS(MEBET))    
-  760 IF(NPJ(75).NE.1) GO TO 93
+  760 IF(NPJ(75).NE.1) GO TO 761
       KEV=KEV+1
       XAD(KEV)=ABS(AMB0IS(MEBET))
+  761 IF(NPJ(76).NE.1) GO TO 762
+      KEV=KEV+1
+      XAD(KEV)=CAWD
+  762 IF(NPJ(77).NE.1) GO TO 93
+      KEV=KEV+1
+      XAD(KEV)=CAWDW
    93 NV=KEV       
 
       READ(20,2)(EP(K),K=1,NV)
@@ -1744,11 +1757,11 @@ C     Restoring READ values for other nuclei in the loop after PARALLEL executio
       XPRN(KEV)=XAD(KEV)
    19 IF(NPJ(10).NE.1) GO TO 20
       KEV=KEV+1
-      WDBW=ABS(XAD(KEV))
+      WDBWG=ABS(XAD(KEV))
       XPRN(KEV)=XAD(KEV)
    20 IF(NPJ(11).NE.1) GO TO 21
       KEV=KEV+1
-      WDWID=ABS(XAD(KEV))
+      WDWIDG=ABS(XAD(KEV))
       XPRN(KEV)=XAD(KEV)
    21 IF(NPJ(12).NE.1) GO TO 22
       KEV=KEV+1
@@ -2026,10 +2039,20 @@ C     XPRN(KEV)=XAD(KEV)*APRN
       KEV=KEV+1
       GAM0IS(MEBET)=ABS(XAD(KEV))
       XPRN(KEV)=XAD(KEV)      
-  761 IF(NPJ(75).NE.1) GO TO 93
+  761 IF(NPJ(75).NE.1) GO TO 762
       KEV=KEV+1
       AMB0IS(MEBET)=ABS(XAD(KEV))
       XPRN(KEV)=XAD(KEV)        
+      
+  762 IF(NPJ(76).NE.1) GO TO 763
+      KEV=KEV+1
+      CAWD=XAD(KEV)
+      XPRN(KEV)=XAD(KEV)        
+  763 IF(NPJ(77).NE.1) GO TO 93
+      KEV=KEV+1
+      CAWDW=XAD(KEV)
+      XPRN(KEV)=XAD(KEV)        
+      
    93 FU=0.D0
 c      IF(NPJ(58).EQ.1.OR.NPJ(63).EQ.1.OR.NPJ(64).EQ.1.OR.NPJ(74).EQ.1.
 c     *OR.NPJ(75).EQ.1) CALL PREQU  

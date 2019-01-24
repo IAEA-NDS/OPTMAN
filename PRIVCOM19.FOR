@@ -71,3 +71,5 @@ CC
       CAARi  = CAAR 
       CARDi  = CARD 
       CAACi =  CAAC 
+      CAWDi  = CAWD
+      CAWDWi = CAWDW

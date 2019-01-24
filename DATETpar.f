@@ -116,13 +116,17 @@ C     dtmp = DBLE(NINT(ATIS(IIIS)-ATIS(1)))
       RR=(RRG*RCORR+CARR*dtmp)*ASQ
       RC=RCG*RCORR*ASQ
       RD=(RDG*RCORR+CARD*dtmp)*ASQ
+      !RD=RDG*RCORR*ASQ
       RW=RWG*RCORR*ASQ
       RS=RSG*RCORR*ASQ
       RZ=RZG*RCORR*ASQ 
       AR0=ARG+CAAR*dtmp
       AC0=ACG+CAAC*dtmp
+      !AC0=ACG
       
-    
+      WDBW=WDBWG+CAWD*dtmp
+      WDWID=WDWIDG+CAWDW*dtmp
+       
 C     PRINT 131, 'Thread ',TID,' VRG=',VRG,' RRG=',RRG,
 C    * ' RDG=',RDG,' ARG=',ARG,' ACG=',ACG,'  IIS=',IIS,' IIIS=',IIIS 
 C     WRITE(21,131) 'Thread ',TID,' VRG=',VRG,' RRG=',RRG,
