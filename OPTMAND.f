@@ -1665,7 +1665,7 @@ C     *******************************************************
 C      COMMON/OPT/XAD(25),GR(25),XAD1(25),XAD2(25),EP(25),EPSGR(25),NV
 C      COMMON/OPB/C,GRR(25),FM,EPS1,NRL
 C      COMMON/CHISQC/FU
-      DIMENSION TEMPAD(25)
+      DIMENSION TEMPAD(35)
       F1=FU
       DO I=1,NV
       DL=EP(I)
@@ -1685,7 +1685,7 @@ C     *******************************************************
       SUBROUTINE XISQT
 C     *******************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      DIMENSION XPRN(25)
+      DIMENSION XPRN(35)
       
 C     These common is used FOR initialization CCOULii <-> CCOUL
       INCLUDE 'PRIVCOM18D.FOR'
