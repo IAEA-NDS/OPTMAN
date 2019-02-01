@@ -2615,6 +2615,11 @@ C     *******************************************************
       RETURN
       ENDIF
      
+      !open(unit=123,file='SMAT')
+      !write(123,'(A5,E14.6)') 'Kinc=',WNK(1)
+      !write(123,'(A5,A3,A5,A3,A3,A5,2A15)') 'J','li','ji','No',
+      !* 'lo','jo','Re(C)','Im(C)'
+      
       CALL PLEGA
       LKK=1
       ETA=CONZ/WNK(1)
@@ -2655,6 +2660,11 @@ C     *******************************************************
    13 IR=JO(NU1)
       ACR=CRD(K1,N1C,N1R)
       ACI=CID(K1,N1C,N1R)
+      
+      !write(123,'(F5.1,I3,F5.1,2I3,F5.1,2E15.5)')JS1/2.0,L1I,J1I/2.0,NU1
+      !* ,L1F,J1F/2.0,CRD(K1,N1C,N1R), CID(K1,N1C,N1R)
+      
+      
       ACR1=ACR*COR-ACI*COI
       ACI1=ACR*COI+ACI*COR
       A=(JS1+1.D0)*DSQRT((J1I+1.D0)*(J1F+1.D0))/A1
@@ -2768,6 +2778,9 @@ C     Cmat*Frez*+Frex*Cmat*=2.*ACC
       DO 10 L=1,LKK
       COE=1.D0
    10 COEF(N,L)=COEF(N,L)/COE/(2*L-1)
+      
+      !close(123)
+      
       RETURN
       END
 C     ***********************************************************
@@ -3609,6 +3622,8 @@ C     BELOW CARD IS NECESSARY IF MEMORY IS LESS THAN 32Mb
       INCLUDE 'PRIVCOM10.FOR' 
       INCLUDE 'PRIVCOM13.FOR'
       INCLUDE 'PRIVCOM14.FOR'
+      
+      INCLUDE 'PRIVCOM20.FOR'
 
       PVV=0.D0
       PWW=0.D0
@@ -4488,17 +4503,27 @@ C      IF(NCA(NU1).NE.NCA(NU2)) GO TO 9
       IF(LAC.GT.NPD) GO TO 19
       IF(R.LE.RZ) PDC=6.*CONZ/(2.*LAC+1.)*R**LAC/RZ**(LAC+1)*BET(LAC)
       IF(R.GT.RZ) PDC=6.*CONZ/(2.*LAC+1.)*RZ**LAC/R**(LAC+1)*BET(LAC)
+      IF(LAC.EQ.2) PDC=PDC*(EFFDEF(NU1,NU2,1)+1.D0)
 
 C     HIGHER COULOMB MULTIPOLES AS PROPOSES BY SATCHLER
 
       IF(LAS2.EQ.1) GO TO 19
       IF(R.LE.RZ) FPVC=6.*CONZ/(2.*LAC+1)*(1.-LAC)*R**LAC/RZ**(LAC+1)
       IF(R.GT.RZ) FPVC=6.*CONZ/(2.*LAC+1)*(LAC+2)*RZ**LAC/R**(LAC+1)
-      IF(LAC.EQ.2) PDC=PDC+FPVC*(0.180223752*BET(2)+0.241795536*BET(4))
-     **BET(2)
-      IF(LAC.EQ.4) PDC=PDC+FPVC*(0.241795536*BET(2)+0.163839774*BET(4))
-     **BET(2)
+!      IF(LAC.EQ.2) PDC=PDC+FPVC*(0.180223752*BET(2)+0.241795536*BET(4))
+!     **BET(2)
+!      IF(LAC.EQ.4) PDC=PDC+FPVC*(0.241795536*BET(2)+0.163839774*BET(4))
+!     **BET(2)
+!      IF(LAC.EQ.6) PDC=PDC+FPVC*0.238565132*BET(2)*BET(4)
+      IF(LAC.EQ.2) PDC=PDC+FPVC*(0.180223752*BET(2)**2*
+     *(EFFDEF(NU1,NU2,7)+2*(EFFDEF(NU1,NU2,1)+1.D0))
+     *+0.241795536*BET(4)*BET(2)*(EFFDEF(NU1,NU2,1)+1.D0))
+      IF(LAC.EQ.4) PDC=PDC+FPVC*(0.241795536*BET(2)**2
+     **(EFFDEF(NU1,NU2,7)+2*(EFFDEF(NU1,NU2,1)+1.D0))
+     *+0.163839774*BET(4)*BET(2)*(EFFDEF(NU1,NU2,1)+1.D0))
+    
       IF(LAC.EQ.6) PDC=PDC+FPVC*0.238565132*BET(2)*BET(4)
+     **(EFFDEF(NU1,NU2,1)+1.D0)      
 C
    19 IF(NPD.NE.0) DE=DEF(1)
       CALL POTET
