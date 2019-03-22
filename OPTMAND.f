@@ -838,7 +838,8 @@ C     COMMON/SHEMM/ES(40),JU(40),NTU(40),NNB(40),NNG(40),NNO(40),NPI(40)
 C=======================================================================
 C     
 C     MENUC-NUMBER OF ADJUSTED ISOTOPES
-C     MEBET-NUMBER OF ISOTOPE DEFORMATIONS OF WHICH ARE ADJUSTED
+C     MEBET-NUMBER OF ISOTOPE DEFORMATIONS OF WHICH ARE ADJUSTED, IF MEBET=0 THEN DEFORMATIONS 
+C           OF ALL ISOTOPES ARE ADJUSTED (BETA2,BETA4,BETA6 FOR NOW)
 C     MEIIS-NUMBER OF ISOTOPE FOR WHICH RESONSNCES ARE TO BE ADJUSTED
 C     MERES-NUMBER OF RESONANCE FOR A CHOZEN ISOTOPE THAT IS TO BE ADJUSTED
 C     MELEV-NUMBER OF LEVEL OF ISOTOPE WITH NUMBER MEBET DEFORMATION FOR WHICH IS TO BE ADJUSTED
@@ -1478,14 +1479,29 @@ C     Storing READ values INTO new VARIABLES (RR -> RRi)
       KEV=KEV+1
       XAD(KEV)=BET4IS(MEBET)
    88 IF(NPJ(60).NE.1) GO TO 899
-      KEV=KEV+1
-      XAD(KEV)=BETIS(MEBET,2)
+        if(MEBET.eq.0) then
+          XAD(KEV+1:KEV+MENUC)=BETIS(1:MENUC,2)
+          KEV=KEV+MENUC
+        else
+          KEV=KEV+1
+          XAD(KEV)=BETIS(MEBET,2)
+        endif
   899 IF(NPJ(61).NE.1) GO TO 901
-      KEV=KEV+1
-      XAD(KEV)=BETIS(MEBET,4)
+        if(MEBET.eq.0) then
+          XAD(KEV+1:KEV+MENUC)=BETIS(1:MENUC,4)
+          KEV=KEV+MENUC
+        else
+          KEV=KEV+1
+          XAD(KEV)=BETIS(MEBET,4)
+        endif
   901 IF(NPJ(62).NE.1) GO TO 910
-      KEV=KEV+1
-      XAD(KEV)=BETIS(MEBET,6)
+        if(MEBET.eq.0) then
+          XAD(KEV+1:KEV+MENUC)=BETIS(1:MENUC,6)
+          KEV=KEV+MENUC
+        else
+          KEV=KEV+1
+          XAD(KEV)=BETIS(MEBET,6)
+        endif
   910 IF(NPJ(63).NE.1) GO TO 92
       KEV=KEV+1
       XAD(KEV)=AMUOIS(MEBET)
@@ -1966,17 +1982,35 @@ C     XPRN(KEV)=XAD(KEV)*APRN
       BET4IS(MEBET)=XAD(KEV)
       XPRN(KEV)=XAD(KEV)
    87 IF(NPJ(60).NE.1) GO TO 88
-      KEV=KEV+1
-      BETIS(MEBET,2)=XAD(KEV)
-      XPRN(KEV)=XAD(KEV)
+        if(MEBET.eq.0) then
+          BETIS(1:MENUC,2)=XAD(KEV+1:KEV+MENUC)
+          XPRN(KEV+1:KEV+MENUC)=XAD(KEV+1:KEV+MENUC)
+          KEV=KEV+MENUC
+        else
+          KEV=KEV+1
+          BETIS(MEBET,2)=XAD(KEV)
+          XPRN(KEV)=XAD(KEV)
+        endif
    88 IF(NPJ(61).NE.1) GO TO 899
-      KEV=KEV+1
-      BETIS(MEBET,4)=XAD(KEV)
-      XPRN(KEV)=XAD(KEV)
+        if(MEBET.eq.0) then
+          BETIS(1:MENUC,4)=XAD(KEV+1:KEV+MENUC)
+          XPRN(KEV+1:KEV+MENUC)=XAD(KEV+1:KEV+MENUC)
+          KEV=KEV+MENUC
+        else
+          KEV=KEV+1
+          BETIS(MEBET,4)=XAD(KEV)
+          XPRN(KEV)=XAD(KEV)
+        endif
   899 IF(NPJ(62).NE.1) GO TO 901
-      KEV=KEV+1
-      BETIS(MEBET,6)=XAD(KEV)
-      XPRN(KEV)=XAD(KEV)
+        if(MEBET.eq.0) then
+          BETIS(1:MENUC,6)=XAD(KEV+1:KEV+MENUC)
+          XPRN(KEV+1:KEV+MENUC)=XAD(KEV+1:KEV+MENUC)
+          KEV=KEV+MENUC
+        else
+          KEV=KEV+1
+          BETIS(MEBET,6)=XAD(KEV)
+          XPRN(KEV)=XAD(KEV)
+        endif
   901 IF(NPJ(63).NE.1) GO TO 910
       KEV=KEV+1
       CMB=AMUOIS(MEBET)**2*BB32
