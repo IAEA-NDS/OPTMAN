@@ -824,7 +824,7 @@ C     COMMON/SHEMM/ES(40),JU(40),NTU(40),NNB(40),NNG(40),NNO(40),NPI(40)
       INCLUDE 'PRIVCOM16D.FOR'    ! not THREADPRIVATE
      
       DIMENSION ITEXT(3),IMOD(7),IPOT(7),MPOT(2),IFOR1(2),IFOR2(9),
-     *IFOR3(3),ISMOD(2),IFOR4(5),IHMOD(3),IFOR5(4)
+     *IFOR3(3),ISMOD(2),IFOR4(5),IHMOD(3),IFOR5(4), IBANDS(10)
 
       DATA ITEXT,IMOD/4HHAMI,4HLTON,4HIAN ,4H RV ,4H VM ,4HDCHM,
      *4H FDM,4H5PA0,4H 5PM,4HCLGB/,
@@ -1533,8 +1533,25 @@ C     Storing READ values INTO new VARIABLES (RR -> RRi)
       KEV=KEV+1
       XAD(KEV)=ABS(GREIS(MEIIS,MERES))
   758 IF(NPJ(73).NE.1) GO TO 759
-      KEV=KEV+1
-      XAD(KEV)=ABS(BETBIS(MEBET,MELEV)) 
+        if(MELEV.eq.0.and.MEBET.ne.0)then
+          IBANDS=-1
+          IIIB=0
+          do III=1,NURIS(MEBET)
+            if(.not.ANY(IBANDS.eq.NUMBIS(MEBET,III))
+     *             .and.NUMBIS(MEBET,III).ne.NUMBIS(MEBET,1)) then
+              IIIB=IIIB+1
+              IBANDS(IIIB)=NUMBIS(MEBET,III)
+              KEV=KEV+1
+              XAD(KEV)=ABS(BETBIS(MEBET,III)) 
+            endif
+          enddo 
+        elseif(MELEV.ne.0.and.MEBET.ne.0)then
+          KEV=KEV+1
+          XAD(KEV)=ABS(BETBIS(MEBET,MELEV)) 
+        else
+          print *,'Not supported yet.'  
+          stop
+        endif
   759 IF(NPJ(74).NE.1) GO TO 760
       KEV=KEV+1
       XAD(KEV)=ABS(GAM0IS(MEBET))    
@@ -1701,7 +1718,7 @@ C     *******************************************************
       SUBROUTINE XISQT
 C     *******************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      DIMENSION XPRN(35)
+      DIMENSION XPRN(35), IBANDS(10),DBANDS(10)
       
 C     These common is used FOR initialization CCOULii <-> CCOUL
       INCLUDE 'PRIVCOM18D.FOR'
@@ -2061,14 +2078,44 @@ C     XPRN(KEV)=XAD(KEV)*APRN
      *ABS(XAD(KEV))
       XPRN(KEV)=XAD(KEV)
   759 IF(NPJ(73).NE.1) GO TO 760
-      KEV=KEV+1
-      !BETBIS(MEBET,MELEV)=ABS(XAD(KEV))
-      DO III=1, NURIS(MEBET)
-         IF(NUMBIS(MEBET,III).eq.NUMBIS(MEBET,MELEV)) THEN
-             BETBIS(MEBET,III)=ABS(XAD(KEV))
-         ENDIF
-      ENDDO
-      XPRN(KEV)=XAD(KEV)
+        if(MELEV.eq.0.and.MEBET.ne.0)then
+          IBANDS=-1
+          DBANDS=0.0
+          IIIB=1
+          IBANDS(1)=NUMBIS(MEBET,1)
+          do III=1,NURIS(MEBET)
+            if(NUMBIS(MEBET,III).ne.NUMBIS(MEBET,1))then
+              do IIII=1,IIIB
+                if(NUMBIS(MEBET,III).eq.IBANDS(IIII))then
+                  BETBIS(MEBET,III)=DBANDS(IIII)
+                  exit
+                endif
+              enddo
+              if(IIII.eq.IIIB+1)then
+                IIIB=IIIB+1
+                IBANDS(IIIB)=NUMBIS(MEBET,III)
+                KEV=KEV+1
+                DBANDS(IIIB)=ABS(XAD(KEV))
+                BETBIS(MEBET,III)=DBANDS(IIIB)
+                XPRN(KEV)=XAD(KEV)              
+              endif
+            endif 
+          enddo
+        elseif(MELEV.ne.0.and.MEBET.ne.0)then
+          KEV=KEV+1
+          !BETBIS(MEBET,MELEV)=ABS(XAD(KEV))
+          DO III=1, NURIS(MEBET)
+             IF(NUMBIS(MEBET,III).eq.NUMBIS(MEBET,MELEV)) THEN
+                 BETBIS(MEBET,III)=ABS(XAD(KEV))
+             ENDIF
+          ENDDO
+          XPRN(KEV)=XAD(KEV)
+        else
+          print *,'Not supported yet.'  
+          stop
+        endif      
+
+      
   760 IF(NPJ(74).NE.1) GO TO 761
       KEV=KEV+1
       GAM0IS(MEBET)=ABS(XAD(KEV))
