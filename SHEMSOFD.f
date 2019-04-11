@@ -237,7 +237,7 @@ C     *****************************************************************
       INCLUDE 'PRIVCOM12.FOR'
       C1=DSQRT(2.D0)
       PI3=4.D0/3.D0*DATAN(1.D0)      
-C     IF (MEHAM.EQ.5.OR.MEHAM.EQ.7) GO TO 2
+      IF (MEHAM.EQ.5.OR.MEHAM.EQ.7) GO TO 2
       AMOO=AMO
       BMOO=BMO
       CMOO=CMO
