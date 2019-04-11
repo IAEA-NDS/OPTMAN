@@ -2067,11 +2067,11 @@ c             matrix elements calculations
               
               !FOLAG1=FOLAG1*(1+(-1)**(KAA/2+KAA2/2))/2
               !FOLAG2=FOLAG2*(1+(-1)**(KAA/2+KAA2/2))/2
-              !IF (ITAU.EQ.ITAU2) THEN
+              IF (ITAU.EQ.ITAU2) THEN
                 DTT2=1.D0
-              !ELSE
-              !  DTT2=0.D0
-              !END IF
+              ELSE
+                DTT2=0.D0
+              END IF
               
               IF (PO1.eq.PO2) THEN
                   DB3=1.D0
@@ -2273,11 +2273,11 @@ c             matrix elements calculations
               
               !FOLAG1=FOLAG1*(1+(-1)**(KAA/2+KAA2/2))/2
               !FOLAG2=FOLAG2*(1+(-1)**(KAA/2+KAA2/2))/2
-              !IF (ITAU.EQ.ITAU2) THEN
+              IF (ITAU.EQ.ITAU2) THEN
                 DTT2=1.D0
-              !ELSE
-              !  DTT2=0.D0
-              !END IF
+              ELSE
+                DTT2=0.D0
+              END IF
               
               IF (PO1.eq.PO2) THEN
                   DB3=1.D0
