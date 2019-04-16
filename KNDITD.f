@@ -1388,8 +1388,18 @@ c      IF(MEDEF.EQ.0) GO TO 777
       IF(MEDEF.EQ.2) GO TO 777
     
        
-       IF(MEDEF.EQ.1.AND.NUMB1.EQ.NUMB2) SCALE=1.D0 + EFFDEF(NU,NU1,8) +
-     *       (EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL   
+       IF(MEDEF.EQ.1.AND.NUMB1.EQ.NUMB2) THEN
+           IF(KO1.EQ.KO2)THEN
+               SCALE=1.D0 + EFFDEF(NU,NU1,8) +
+     *               (EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL
+           ELSEIF(IABS(KO1-KO2).EQ.4)THEN
+               SCALE=EFFDEF(NU,NU1,3)
+           ELSE    
+               SCALE=0.0  
+           ENDIF    
+       ENDIF
+           
+
      
        IF(MEDEF.EQ.0.AND.MEVOL.EQ.1.AND.NUMB(NNJ1(K)).EQ.NUMB(1).AND.
      *       NUMB(NNJ1(KK)).EQ.NUMB(1)) SCALE=1.D0 + EFFDEF(NU,NU1,8)+
@@ -1402,7 +1412,7 @@ c      IF(MEDEF.EQ.0) GO TO 777
        IF (KO1.EQ.KO2.AND.NPO(NU).EQ.NPO(NU1)) THEN
              SCALE=(EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL             
           ELSE IF (IABS(KO1-KO2).EQ.4.AND.NPO(NU).EQ.NPO(NU1)) THEN
-             SCALE=EFFDEF(NU,NU1,3)!/BTGS!(1.D0+BTGS**2)/AVOL 
+             SCALE=EFFDEF(NU,NU1,3)!/BTGS!(1.D0+BTGS**2)/AVOL
           ELSE IF (KO1.EQ.KO2.AND.NPO(NU).NE.NPO(NU1)) THEN
              SCALE=EFFDEF(NU,NU1,4)/BTGS/AVOL
 C             PRINT *, SCALE,EFFDEF(NU,NU1,4),BTGS,AVOL,WE1,WE2,CVNN1
