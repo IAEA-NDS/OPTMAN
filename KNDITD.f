@@ -1162,16 +1162,24 @@ C    *          EFFDEF(NU,NU1,6)/BTGS)*0.282094791773878D0/AVOL
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 C       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK) 
        !IF(MEVOL.EQ.1.AND.K.EQ.KK)  
-      IF(MERAD.EQ.0) THEN
-          STATCOR=BTGS !!! CHANGE TO BTGS !!!!
+      IF(MERAD.EQ.0.AND.NU.EQ.NU1) THEN
+          STATCOR=BTGS!+BET3**2/BTGS!!! CHANGE TO BTGS !!!!
       ELSE
           STATCOR=0.0
       END IF 
       
+      !IF(NU.EQ.NU1)THEN
+      !    BET32AVG=BET3**2
+      !ELSE
+      !    BET32AVG=0.0
+      !ENDIF
+      
+      
       IF(MEVOL.EQ.1.!AND.LN1.EQ.LN2.
      *AND.J1.EQ.J2.AND.KO1.EQ.KO2.AND.JO1.EQ.JO2.AND.NCA1.EQ.NCA2)  
      *         CVNRV0(K2PN)=-(EFFDEF(NU,NU1,1)*BTGS*2.D0+STATCOR+!BTGS2+                           
-     *          EFFDEF(NU,NU1,6)/BTGS+EFFDEF(NU,NU1,7)*BTGS
+     *          (EFFDEF(NU,NU1,6)!-BET32AVG
+     * )/BTGS+EFFDEF(NU,NU1,7)*BTGS
      *          )*0.282094791773878D0/AVOL                               
      
       !!!if(NU.ne.1) CVNRV0(K2PN)=0
