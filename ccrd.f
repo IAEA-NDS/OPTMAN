@@ -5311,7 +5311,7 @@ C     ***********************************************************
       INCLUDE 'PRIVCOM10.FOR'
        INCLUDE 'PRIVCOM13.FOR'              
       MSOLIN=MESOL
-C      IF(NSS.LT.5) MESOL=2
+      IF(NSS.LT.10) MESOL=2
       IF(MESOL.LE.3) GO TO 5
       NCLLT=NCLL
       INCRT=INCR
