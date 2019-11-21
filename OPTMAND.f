@@ -73,14 +73,13 @@ C  ****************************************************************
 C     SUBROUTINE OPTMAN12(fname)
 C  *************************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      LOGICAL EMPIRE, unformat
       logical f_ex
       character*20 answ
-      CHARACTER*20 fname 
-      COMMON/INOUT/fname,EMPIRE,unformat
+      INCLUDE 'PRIVCOM20.FOR'
 
       INCLUDE 'PRIVCOM10.FOR'
       INCLUDE 'PRIVCOM17D.FOR'  
+      INCLUDE 'PRIVCOM21.FOR'
       
       CHARACTER*80 TITLE
 
@@ -373,9 +372,11 @@ C     *******************************************************
       CHARACTER*4 ITEXT,IMOD,IPOT,MPOT,IFOR1,IFOR2,
      *IFOR3,ISMOD,IFOR4,IHMOD,IFOR5 
      
-      LOGICAL EMPIRE
-      CHARACTER*20 fname 
-      COMMON/INOUT/fname,EMPIRE
+      
+      INCLUDE 'PRIVCOM21.FOR'
+      INCLUDE 'PRIVCOM23.FOR'
+      
+      INCLUDE 'PRIVCOM20.FOR'
 
 C     Data read in OPTMAND
       INCLUDE 'PRIVCOM10.FOR'
@@ -782,6 +783,10 @@ C
 !$OMP*  COPYIN(/RADi/,/DISPEi/,/CSBi/,/NCLMAi/)         ! PRIVCOM (b) 
 !$OMP*  COPYIN(/NCLMA/)                                 ! PRIVCOM 
 !$OMP*  COPYIN(/RAD/,/QNB/)                             ! PRIVCOM 
+
+!$OMP*  COPYIN(/LOFAC/)                                ! 
+!$OMP*  COPYIN(/INOUT/)                                ! 
+
 C
 !$OMP DO SCHEDULE(DYNAMIC,1)
 C     This is a parallel loop
@@ -1744,8 +1749,7 @@ C     COMMON/SHEMM/ES(40),JU(40),NTU(40),NNB(40),NNG(40),NNO(40),NPI(40)
       INCLUDE 'PRIVCOM17D.FOR'    ! not THREADPRIVATE
       INCLUDE 'PRIVCOM16D.FOR'    ! not THREADPRIVATE
 
-      COMMON/NIND/IIS
-!$OMP THREADPRIVATE(/NIND/)     
+      INCLUDE 'PRIVCOM22.FOR'   
 
       INTEGER IIparal
         

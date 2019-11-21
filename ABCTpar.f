@@ -5,9 +5,9 @@
 
       CHARACTER*1  cpar
       DIMENSION JTEMP(40),JSHIFT(40)
-      LOGICAL EMPIRE
-      CHARACTER*20 fname 
-      COMMON/INOUT/fname,EMPIRE
+     
+      INCLUDE 'PRIVCOM21.FOR'      
+
       
       INCLUDE 'PRIVCOM.FOR'         
       INCLUDE 'PRIVCOM1.FOR'
@@ -22,7 +22,6 @@ C     Input commons (do not change with energy)
       INCLUDE 'PRIVCOM15.FOR'
       INCLUDE 'PRIVCOM16D.FOR'
       INCLUDE 'PRIVCOM20.FOR'
-      
 
       
       CHARACTER*8 PNAME

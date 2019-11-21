@@ -21,7 +21,7 @@ OUTMODE =
 # for unformatted
 
 # set parallel
-PARALLEL = 
+PARALLEL =OPENMP
 # set to "OPENMP" for parallelization or leave blank for single thread
 
 # set matrix inversion
@@ -51,7 +51,7 @@ ifeq ($(FC),gfortran)
   #----flags for production compilation with gfortran
   FFLAGS = -O3 -std=legacy -ftree-vectorize -ffast-math -cpp
   ifeq ($(PARALLEL),OPENMP) 
-    FFLAGS = $(FFLAGS) -fopenmp
+    FFLAGS += -fopenmp
   endif
   #FFLAGS = -O3 -pg -std=legacy
   #----flags for debuging
@@ -84,7 +84,7 @@ else ifeq ($(FC),ifort)
   #----flags for automatic parallelization
   FFLAGS = -O3 -fpp #-x=host -parallel -par-report1
   ifeq ($(PARALLEL),OPENMP) 
-    FFLAGS = $(FFLAGS) -qopenmp
+    FFLAGS += -qopenmp
   endif
   # Flags for ECIS
   EFLAGS = -O2 -x=host

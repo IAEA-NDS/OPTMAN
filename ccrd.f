@@ -561,20 +561,19 @@ C     *******************************************************
       DOUBLE PRECISION jc,jj
       INTEGER ltlmax, itmp, LLLMAX
       CHARACTER*1 parc
-      LOGICAL unformatted
 
       PARAMETER (LLLMAX=100)
       DIMENSION STL(LLLMAX)
       
       real*8, parameter :: haf = 0.5D0
 
-      CHARACTER*20 fname
-      COMMON/INOUT/fname
+      INCLUDE 'PRIVCOM20.FOR'
 
       INCLUDE 'PRIVCOM.FOR'
       INCLUDE 'PRIVCOM7.FOR'  
       INCLUDE 'PRIVCOM10.FOR' 
       INCLUDE 'PRIVCOM13.FOR'      
+      INCLUDE 'PRIVCOM21.FOR'
       AMI=939.56536
       IF(MECHA.EQ.1) AMI=938.272029D0
        
@@ -5769,7 +5768,7 @@ C     *****************************************************************
       SUBROUTINE KLEGO1
 C     *****************************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      COMMON/LOFAC/A(800)
+      INCLUDE 'PRIVCOM23.FOR' ! LOFAC
       INCLUDE 'PRIVCOM1.FOR'
 C     COMMON/KG/J1,J2,M1,M2,J,M,AKG
 

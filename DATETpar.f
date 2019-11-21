@@ -28,9 +28,9 @@ C     These common is used FOR initialization CCOULii <-> CCOUL
       INCLUDE 'PRIVCOM18D.FOR'
   
 
-      COMMON/NIND/IIS
+      INCLUDE 'PRIVCOM22.FOR'
       CHARACTER*8 PNAME
-!$OMP THREADPRIVATE(/NIND/)     
+
 
       INTEGER TID
 !$    INTEGER OMP_GET_THREAD_NUM
@@ -104,6 +104,7 @@ C     GO TO 702
          BET(I)=BETIS(IIIS,I)
          BET2SUM=BET2SUM+BET(I)**2
       END DO
+      !BET2SUM=BET2SUM+BET3**2
       RCORR=1.d0
       IF(MERAD.EQ.1) RCORR=1.d0-BET2SUM*7.9577471546d-2 ! 1-bet2sum/(4*pi)
 C      BETB(MELEV)=BETBIS(IIIS,MELEV)
