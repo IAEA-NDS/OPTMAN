@@ -1180,7 +1180,7 @@ C       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK)
      *         CVNRV0(K2PN)=-(EFFDEF(NU,NU1,1)*BTGS*2.D0+STATCOR+!BTGS2+                           
      *          (EFFDEF(NU,NU1,6)!-BET32AVG
      * )/BTGS+EFFDEF(NU,NU1,7)*BTGS
-     *          )*0.282094791773878D0/AVOL                               
+     *          )*0.282094791773878D0/AVOL*0.282094791773878D0                               
      
       !!!if(NU.ne.1) CVNRV0(K2PN)=0
       ! IF(MEDEF.EQ.0) CVNRV0(K2PN)=0.0  ! temporary workout for odd
@@ -1389,19 +1389,21 @@ c      IF(MEDEF.EQ.0) GO TO 777
   
       
        IF(L.GT.1 ) GO TO 88 
-       
-      IF(MEDEF.EQ.2.AND.KO1.eq.KO2) SCALE=DCOS(GAM0) 
-      IF(MEDEF.EQ.2.AND.IABS(KO1-KO2).EQ.4.AND.NPO(NU).EQ.NPO(NU1))   
+      !! NUMB is correct quantum number instead of KO 
+      IF(MEDEF.EQ.2.AND.NUMB1.EQ.NUMB2) SCALE=DCOS(GAM0)
+      IF(MEDEF.EQ.2.AND.IABS(KO1-KO2).EQ.4.AND.NPO(NU).EQ.NPO(NU1))
      *       SCALE=DSIN(GAM0)/SQ2
       IF(MEDEF.EQ.2) GO TO 777
     
-       
+       !! replace effective deformations of K=2 and gamma bands to ones 
+       !! of rigid asymmetric rotor since in SRM they are is not correct
        IF(MEDEF.EQ.1.AND.NUMB1.EQ.NUMB2) THEN
            IF(KO1.EQ.KO2)THEN
-               SCALE=1.D0 + EFFDEF(NU,NU1,8) +
-     *               (EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL
+               SCALE=!1.D0 + EFFDEF(NU,NU1,8) +
+!    *             (EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL
+     *             DCOS(GAM0) + EFFDEF(NU,NU1,8)+EFFDEF(NU,NU1,1)
            ELSEIF(IABS(KO1-KO2).EQ.4)THEN
-               SCALE=EFFDEF(NU,NU1,3)
+               SCALE=DSIN(GAM0)/SQ2!EFFDEF(NU,NU1,3)
            ELSE    
                SCALE=0.0  
            ENDIF    
@@ -1416,11 +1418,14 @@ c      IF(MEDEF.EQ.0) GO TO 777
       IF(NUMB1.EQ.NUMB2) GO TO 777
       IF(L.GT.1 ) pause
        
+      !! replace effective deformations of K=2 and gamma bands to ones 
+      !! of rigid asymmetric rotor since in SRM they are is not correct
       IF (MEDEF.EQ.1.AND.NUMB1.NE.NUMB2) THEN
        IF (KO1.EQ.KO2.AND.NPO(NU).EQ.NPO(NU1)) THEN
-             SCALE=(EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL             
+             SCALE=!(EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL             
+     *         DCOS(GAM0)-1.0+EFFDEF(NU,NU1,1)
           ELSE IF (IABS(KO1-KO2).EQ.4.AND.NPO(NU).EQ.NPO(NU1)) THEN
-             SCALE=EFFDEF(NU,NU1,3)!/BTGS!(1.D0+BTGS**2)/AVOL
+             SCALE=DSIN(GAM0)/SQ2!EFFDEF(NU,NU1,3)!/BTGS!(1.D0+BTGS**2)/AVOL
           ELSE IF (KO1.EQ.KO2.AND.NPO(NU).NE.NPO(NU1)) THEN
              SCALE=EFFDEF(NU,NU1,4)/BTGS/AVOL
 C             PRINT *, SCALE,EFFDEF(NU,NU1,4),BTGS,AVOL,WE1,WE2,CVNN1
