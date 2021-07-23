@@ -169,6 +169,8 @@ C     KODMA=KOD
       NUI=1
       NUF=NMAX
       
+      IF(.not.EMPIRE) then
+
       KEYAP=1
       CALL ANPOW                       !NOT WORKING YET !!!!!
       IF(MEPRI.NE.98) THEN
@@ -197,6 +199,8 @@ C     KODMA=KOD
       WRITE(328,111)TET(M),(DISC(K,M),K=1,NMAX)      
   315 CONTINUE
       ENDIF
+
+      ENDIF 
 
       CALL DISCA
       
