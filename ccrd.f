@@ -1097,10 +1097,10 @@ C      CLOSE(92)
        Stl = 0.d0
 
        IF(unformatted) then 
-         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.tlj',
+         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.TLJ',
      &         ERR=1200,form='unformatted')
        ELSE
-         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.tlj', ERR=1200)
+         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.TLJ', ERR=1200)
          READ(45,*,END=1200)    ! To skip first line <TLJs.> ..
        ENDIF 
 
