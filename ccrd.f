@@ -1016,9 +1016,9 @@ C      from ecis06
  1008  FORMAT (1X,I2,I6,F9.1,2X,1P,D18.8,0P)                            CAL1-429
 C----------------
        if (unformatted) then
-           open(unit=92,file=TRIM(fname)//'.TLJ', form='unformatted')
+           open(unit=92,file=TRIM(fname)//'.tlj', form='unformatted')
        else
-           open(unit=92,file=TRIM(fname)//'.TLJ')
+           open(unit=92,file=TRIM(fname)//'.tlj')
        endif
 
 C      WRITE(92,'(10H<TLJ     >,F10.2,F10.5,F10.2,2I5)') 
@@ -1097,10 +1097,10 @@ C      CLOSE(92)
        Stl = 0.d0
 
        IF(unformatted) then 
-         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.TLJ',
+         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.tlj',
      &         ERR=1200,form='unformatted')
        ELSE
-         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.TLJ', ERR=1200)
+         OPEN(45,STATUS='old',FILE=TRIM(fname)//'.tlj', ERR=1200)
          READ(45,*,END=1200)    ! To skip first line <TLJs.> ..
        ENDIF 
 

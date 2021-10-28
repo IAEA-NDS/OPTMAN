@@ -293,8 +293,8 @@ C     CROSS SECTION FILES
 C
 
       IF(MEPRI.EQ.98) THEN  
-        open(unit=93,file=TRIM(fname)//'.CS')
-        open(unit=98,file=TRIM(fname)//'.ICS')
+        open(unit=93,file=TRIM(fname)//'.cs')
+        open(unit=98,file=TRIM(fname)//'.ics')
 
        IF(ETA.EQ.0.D0) THEN
 C        WRITE(93,'(10H<CROSS-S.>,F10.2,F10.5,F10.2,2I5)') 
@@ -349,8 +349,8 @@ C        WRITE(93,'(1X,E14.8)') (CST - CSN(1))*1000.
        
       IF(MEPRI.EQ.98) THEN  
 C
-        open(unit=96,file=TRIM(fname)//'.LEG')
-        open(unit=97,file=TRIM(fname)//'.ANG')
+        open(unit=96,file=TRIM(fname)//'.leg')
+        open(unit=97,file=TRIM(fname)//'.ang')
 C
 c       IF(ETA.EQ.0.) WRITE(96,'(10H<LEGENDRE>,F10.2,F10.5,F10.2,2I5)') 
         IF(ETA.EQ.0.D0) WRITE(96,1000) ANEU,EN,AT,NINT(0.5*JO(1)),NMAX
