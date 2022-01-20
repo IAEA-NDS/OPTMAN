@@ -5775,7 +5775,7 @@ C     *****************************************************************
       SUBROUTINE KLEGO1
 C     *****************************************************************
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      INCLUDE 'PRIVCOM23.FOR' ! LOFAC
+      INCLUDE 'PRIVCOM4.FOR' ! LOFAC
       INCLUDE 'PRIVCOM1.FOR'
 C     COMMON/KG/J1,J2,M1,M2,J,M,AKG
 

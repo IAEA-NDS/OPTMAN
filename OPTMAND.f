@@ -374,7 +374,7 @@ C     *******************************************************
      
       
       INCLUDE 'PRIVCOM21.FOR'
-      INCLUDE 'PRIVCOM23.FOR'
+      INCLUDE 'PRIVCOM4.FOR'
       
       INCLUDE 'PRIVCOM20.FOR'
 
@@ -785,7 +785,7 @@ C
 !$OMP*  COPYIN(/RAD/,/QNB/)                             ! PRIVCOM 
 
 !$OMP*  COPYIN(/LOFAC/)                                ! 
-!$OMP*  COPYIN(/INOUT/)                                ! 
+!$OMP*  COPYIN(/INOUT/)                                !                        
 
 C
 !$OMP DO SCHEDULE(DYNAMIC,1)
