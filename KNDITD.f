@@ -1153,15 +1153,15 @@ C         PAUSE 222
 
 
  
-C     IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.LN1.EQ.LN2.
+C     IF(MEVOL.GE.1.AND.MEDEF.EQ.1.AND.LN1.EQ.LN2.
 C    *AND.J1.EQ.J2.AND.KO1.EQ.KO2.AND.JO1.EQ.JO2.AND.NCA1.EQ.NCA2)  
 C    *         CVNRV0(K2PN)=-(EFFDEF(NU,NU1,1)*BTGS*2.D0+BTGS2+                           
 C    *          EFFDEF(NU,NU1,6)/BTGS)*0.282094791773878D0/AVOL
      
  
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-C       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK) 
-       !IF(MEVOL.EQ.1.AND.K.EQ.KK)  
+C       IF(MEVOL.GE.1.AND.MEDEF.EQ.1.AND.K.EQ.KK) 
+       !IF(MEVOL.GE.1.AND.K.EQ.KK)  
       IF(MERAD.EQ.0.AND.NU.EQ.NU1) THEN
           STATCOR=BTGS!+BET3**2/BTGS!!! CHANGE TO BTGS !!!!
       ELSE
@@ -1175,7 +1175,7 @@ C       IF(MEVOL.EQ.1.AND.MEDEF.EQ.1.AND.K.EQ.KK)
       !ENDIF
       
       
-      IF(MEVOL.EQ.1.!AND.LN1.EQ.LN2.
+      IF(MEVOL.GE.1.!AND.LN1.EQ.LN2.
      *AND.J1.EQ.J2.AND.KO1.EQ.KO2.AND.JO1.EQ.JO2.AND.NCA1.EQ.NCA2)  
      *         CVNRV0(K2PN)=-(EFFDEF(NU,NU1,1)*BTGS*2.D0+STATCOR+!BTGS2+                           
      *          (EFFDEF(NU,NU1,6)!-BET32AVG
@@ -1411,7 +1411,7 @@ c      IF(MEDEF.EQ.0) GO TO 777
            
 
      
-       IF(MEDEF.EQ.0.AND.MEVOL.EQ.1.AND.NUMB(NNJ1(K)).EQ.NUMB(1).AND.
+       IF(MEDEF.EQ.0.AND.MEVOL.GE.1.AND.NUMB(NNJ1(K)).EQ.NUMB(1).AND.
      *       NUMB(NNJ1(KK)).EQ.NUMB(1)) SCALE=1.D0 + EFFDEF(NU,NU1,8)+
      *       (EFFDEF(NU,NU1,1)-EFFDEF(NU,NU1,2))/AVOL  
             
@@ -1437,7 +1437,36 @@ C             PAUSE 4444
           END IF   
       END IF
   
- 
+      !! compensation of CoM movement
+      IF (MEVOL.EQ.2.AND.MEDEF.EQ.1!.AND.DIPOLECORRECTION.EQ.1.AND.EVENEVEN
+     *   .AND.NUMB1.NE.NUMB2.AND.KO1.EQ.KO2.AND.NPO(NU).NE.NPO(NU1))THEN
+          ! Part of A-factor
+          J1=JNJ1(K)
+          J2=JNJ1(KK)
+          M1=-1
+          M2=1
+          J=1*2 !!2*lam
+          M=0
+          CALL KLEGO
+          AKGS=AKG      
+          ! RME
+          J1=JO2
+          J2=2*1!! 2*lam
+          M1=KO(NU1)
+          M2=0
+          M=KO1
+          J=JO1
+          CALL KLEGO
+          AKG=AKG*SQRT(J1+1.D0)
+          ! Racah
+          JF=1*2 !! 2*lam
+          CALL RACAH
+          ! Scale = -[beta3]eff*sqrt(3/(7pi))*(9/2/sqrt(5)beta2+2beta4)
+          !     CVNN1=CCC*BKG*AKG*W          
+          CVNR(LL2)=CVNR(LL2)-CCC*AKG*AKGS*W*WE1*WE2*EFFDEF(NU,NU1,4)*
+     *                (0.7433*BTGS+0.7387*BET(4))
+      END IF
+      !! end CoM compensation
 
   777 CONTINUE    
 C  88  CVNR(LL2)=CVNR(LL2)*SCALE
