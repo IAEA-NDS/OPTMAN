@@ -94,7 +94,8 @@ CC
 !$OMP THREADPRIVATE(/MAT/,/VEC1/,/EIT/,/XI12/,/PB/,/TR/,/TR1/)
 !$OMP THREADPRIVATE(/SGB/)
      
- 
+!$OMP THREADPRIVATE(/ALL/,/OLL/)
+
 C     *******************************************************
 C     END of privcom9
 C     *******************************************************
