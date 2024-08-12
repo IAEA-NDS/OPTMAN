@@ -792,8 +792,8 @@ C
 !$OMP*  COPYIN(/NCLMA/)                                 ! PRIVCOM 
 !$OMP*  COPYIN(/RAD/,/QNB/)                             ! PRIVCOM 
 
-!$OMP*  COPYIN(/LOFAC/)                                ! 
-!$OMP*  COPYIN(/INOUT/)                                !                        
+ccc!$OMP*  COPYIN(/LOFAC/)                                ! 
+ccc!$OMP*  COPYIN(/INOUT/)                                !                        
 
 C
 !$OMP DO SCHEDULE(DYNAMIC,1)
