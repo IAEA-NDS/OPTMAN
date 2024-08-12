@@ -6476,14 +6476,19 @@ C	open(unit=904,file='PxPz.txt')
       CS_ANG_MIF=0.D0
       
 	TETA=TET(MM)*3.1415927/180
-	ALST2=DLOG(DSIN(TETA/2.D0))
-      ARGC=2.D0*(COPH(1,1)-ETA*ALST2)
-	temp=-ETA/(20.D0*WNK(1)*DSIN(TETA/2.D0)**2)*DCOS(ARGC)
-c	FC_R(M)=temp 
-	FC_R=temp 
-	temp=-ETA/(20.D0*WNK(1)*DSIN(TETA/2.D0)**2)*DSIN(ARGC)
-c	FC_I(M)=temp       
-	FC_I=temp       
+	if (TETA.ne.0.D0) then
+        ALST2=DLOG(DSIN(TETA/2.D0))
+        ARGC=2.D0*(COPH(1,1)-ETA*ALST2)  
+        temp=-ETA/(20.D0*WNK(1)*DSIN(TETA/2.D0)**2)*DCOS(ARGC)
+c	  FC_R(M)=temp 
+	  FC_R=temp 
+	  temp=-ETA/(20.D0*WNK(1)*DSIN(TETA/2.D0)**2)*DSIN(ARGC)
+c	  FC_I(M)=temp       
+	  FC_I=temp       
+      else
+        FC_R=0.D0
+        FC_I=0.D0
+      endif
 c  627	continue		
       !------------------------------------------------------------	
       DO 1 K1=1,NJ
@@ -6679,7 +6684,12 @@ c      DO 620 M=1,MTET
  
       !print *, '%%%', TET(MM),CS_ANG(N)
       
-      DISC(N,MM)=DISC(N,MM)/CS_ANG(N)
+      if(CS_ANG(N).ne.0.D0) then
+         DISC(N,MM)=DISC(N,MM)/CS_ANG(N)
+      else 
+         DISC(N,MM)=0.D0
+      endif           
+
       IF(KEYAP.EQ.1) DISC(N,MM)=-DISC(N,MM)
 c  620 CONTINUE    
   619 CONTINUE 
@@ -6713,16 +6723,23 @@ C	COMMON/DISK/TET(150),MTET
 	TETA=TET(M)*3.1415927D0/180.D0
 	COS_TETA=DCOS(TETA)
 	SIN_TETA=DSIN(TETA)
-	COT_TETA=COS_TETA/SIN_TETA
-	PLM_DATA(L+1,L+1,M)=C*(-1.D0*SIN_TETA)**L !P L L
-	PLM_DATA(L+1,L,M)=PLM_DATA(L+1,L+1,M)*(-2.D0*COT_TETA)*L/
+      if(TETA.ne.0.D0) then
+	  COT_TETA=COS_TETA/SIN_TETA
+        PLM_DATA(L+1,L+1,M)=C*(-1.D0*SIN_TETA)**L !P L L
+	  PLM_DATA(L+1,L,M)=PLM_DATA(L+1,L+1,M)*(-2.D0*COT_TETA)*L/
      *  DSQRT(2.D0*L) !P L L-1
-	DO 639 LM=L-2,0,-1 !recursion from l-2 to 0 order 
-	PLM_DATA(L+1,LM+1,M)=(-2.D0*COT_TETA*(LM+1)*PLM_DATA(L+1,LM+2,M)-
-     *DSQRT(1.D0*(L+LM+2))*DSQRT(1.D0*(L-LM-1))*PLM_DATA(L+1,LM+3,M))/
-     *(DSQRT(1.D0*(L+LM+1))*DSQRT(1.D0*(L-LM)))
-  639 CONTINUE !LM LOOP
+	  DO 639 LM=L-2,0,-1 !recursion from l-2 to 0 order 
+	  PLM_DATA(L+1,LM+1,M)=(-2.D0*COT_TETA*(LM+1)*PLM_DATA(L+1,LM+2,M)-
+     *  DSQRT(1.D0*(L+LM+2))*DSQRT(1.D0*(L-LM-1))*PLM_DATA(L+1,LM+3,M))/
+     *  (DSQRT(1.D0*(L+LM+1))*DSQRT(1.D0*(L-LM)))
+      
+  639   CONTINUE !LM LOOP
 
+      else
+        PLM_DATA(L+1,:,M)=0.D0
+        PLM_DATA(L+1,1,M)=1.D0
+      endif
+          
   637 CONTINUE !ANGULAR LOOP
       PLM_DATA(L+1,1:L+1,:)=PLM_DATA(L+1,1:L+1,:)*DSQRT(L+0.5D0)
       IFLAG=1.

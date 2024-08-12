@@ -90,7 +90,7 @@ C     REAL*8  LFA(400),dtmp
       INCLUDE 'PRIVCOM4.FOR'
 c      COMMON/LOFAC/A(800)
 
-      INTEGER NTHREADS, TID
+      INTEGER NTHREADS, TID, narg
 !$    INTEGER OMP_GET_NUM_THREADS, OMP_GET_THREAD_NUM
 C     INTEGER omp_set_num_threads
 
@@ -186,8 +186,12 @@ C--------------------- FOR NORMAL OPERATION (NOT EMPIRE) ---------------
         WRITE(*,'(A)')' *   POTENTIAL MULTIPOLES, ANALYZING POWERS    *'
         WRITE(*,'(A)')' ***********************************************'
 C
-        WRITE(*,'(1X,A40)') 'INPUT FILE NAME (without extension) ? =>'
-        READ(*,'(A20)') fname
+        narg = 1
+        CALL getarg(narg,fname)
+        if(trim(fname(1:1)).eq.'') then
+          WRITE(*,'(1X,A40)') 'INPUT FILE NAME (without extension) ? =>'
+          READ(*,'(A20)') fname
+        endif
         if(fname(1:1).eq.'') fname='OPTMAN'
 
 C       fname='rigidtest'
