@@ -141,7 +141,7 @@ C       Output filename fixed to OPTMAN.OUT for EMPIRE
         WRITE(21,'(5x,A)')
      *  '***********************************************'
         WRITE(21,'(5x,A)')
-     *  '*      CODE OPTMAN VERSION 16 ( JANUARY 2016)    *'
+     *  '*      CODE OPTMAN VERSION 24 ( SEP 2024)     *'
 !$      WRITE(21,'(5x,A)')
 !$   *  '*      OPENMP version for parallel execution  *'
 #ifdef LAPACK      
@@ -172,7 +172,7 @@ C       Output filename fixed to OPTMAN.OUT for EMPIRE
       ELSE
 C--------------------- FOR NORMAL OPERATION (NOT EMPIRE) ---------------
         WRITE(*,'(A)')' ***********************************************'
-        WRITE(*,'(A)')' *      CODE OPTMAN VERSION 16 ( JANUARY 2016) *'
+        WRITE(*,'(A)')' *      CODE OPTMAN VERSION 24 ( SEP 2024)     *'
 !$      WRITE(*,'(A)')' *      OPENMP version for parallel execution  *'
 #ifdef LAPACK      
         WRITE(*,'(A)')' *   USE LAPACK LIBRARY FOR MATRIX INVERSION   *'
@@ -220,7 +220,7 @@ C        open(unit=21,file=TRIM(fname)//'.OUT',STATUS='NEW')
         WRITE(21,'(5x,A)')
      *  '***********************************************'
         WRITE(21,'(5x,A)')
-     *  '*     CODE OPTMAN VERSION 16 ( JANUARY 2016)     *'
+     *  '*     CODE OPTMAN VERSION 24 ( SEP 2024)      *'
 !$      WRITE(21,'(5x,A)')
 !$   *  '*    OPENMP version for parallel execution    *'
 #ifdef LAPACK      
