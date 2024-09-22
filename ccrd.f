@@ -6729,7 +6729,7 @@ C	COMMON/DISK/TET(150),MTET
 	  PLM_DATA(L+1,L,M)=PLM_DATA(L+1,L+1,M)*(-2.D0*COT_TETA)*L/
      *  DSQRT(2.D0*L) !P L L-1
 	  DO 639 LM=L-2,0,-1 !recursion from l-2 to 0 order 
-	  PLM_DATA(L+1,LM+1,M)=(-2.D0*COT_TETA*(LM+1)*PLM_DATA(L+1,LM+2,M)-
+	 PLM_DATA(L+1,LM+1,M)=(-2.D0*COT_TETA*(LM+1)*PLM_DATA(L+1,LM+2,M)-
      *  DSQRT(1.D0*(L+LM+2))*DSQRT(1.D0*(L-LM-1))*PLM_DATA(L+1,LM+3,M))/
      *  (DSQRT(1.D0*(L+LM+1))*DSQRT(1.D0*(L-LM)))
       
