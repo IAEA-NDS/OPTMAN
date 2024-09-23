@@ -1,28 +1,10 @@
 MIT License
 
-Copyright (c) 2024 
-
-AUTHORS:
-
-      EFREM SOUKHOVITSKI - NON-AXIAL SOFT-ROTATOR NUCLEAR MODEL THEORY, MAIN
-                           CC COMPUTATIONAL ALGORITHMS AND CODING, LANE 
-                           CONSISTENCY AND (P,N) CS, PARALLELIZATION
-                           E-MAIL: esukhov@sosny.bas-net.by
-
-      SATOSHI CHIBA      - THEORY DEVELOPMENT in COOPERATION WITH
-                           E. SOUKHOVITSKI, E-MAIL: chiba.satoshi@jaea.go.jp
-
-      ROBERTO CAPOTE     - DISPERSIVE OPTICAL MODEL POTENTIAL RELATIONS,
-                           LANE CONSISTENCY AND (P,N) CS, RIPL INTERFACE,
-                           PARALLELIZATION  
-                           E-MAIL: R.CapoteNoy@iaea.org
-
-      JOSE M. QUESADA    - DISPERSIVE OPTICAL MODEL POTENTIAL RELATIONS,
-                           LANE CONSISTENCY,E-MAIL: quesada@us.es
-      
-      DMITRY MARTYANOV   - THEORY DEVELOPMENT in COOPERATION WITH
-                           E. SOUKHOVITSKI, CODE DEVELOPEMENT
-                           E-MAIL: dmart@sosny.bas-net.by
+Copyright (c) 2024 Efrem Soukhovitski 
+Copyright (c) 2024 Satoshi Chiba
+Copyright (c) 2024 Roberto Capote
+Copyright (c) 2024 Jose M. Quesada
+Copyright (c) 2024 Dmitry Martyanov
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
