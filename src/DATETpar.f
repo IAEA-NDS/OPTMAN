@@ -176,7 +176,11 @@ C
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
           !JU=NINT(DBLE(JO)/4.0)*2!-JBASE
-          JU=NINT(DBLE(JO-JO(1))/4.0)*2+JSHIFT ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
+          JBASE=JO(1)
+          do IID=1,NUR
+              if (NUMB(IID).eq.NUMB(1)) JBASE=MIN(JBASE,JO(IID))
+          enddo
+          JU=NINT(DBLE(JO-JBASE)/4.0)*2+JSHIFT ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
           !!! ABNORMAL BAND SHOULD BE ASSIGNED SEPARATELY!!!
       END IF
       
@@ -458,7 +462,13 @@ C     FU=FU+((SRE(IIS,IE)-CSR)/DSR(IIS,IE))**2
       DO 9 I=NUI,NUF
     9 DISG(M)=DISG(M)+DISC(I,M)
       
-      
+      SELECT CASE (KEYAP)
+c      CASE (0)        
+      CASE (1)
+         DISG = sum(Ay,dim=1)
+      CASE (2)
+         DISG = sum(Py,dim=1)
+      END SELECT 
       
       IF(KEYAP.EQ.0 .AND. MEPRI.LT.98) PRINT 100,
      *                        PNAME,TID,IIS,IE,EEIS(IIS,IE),KG,NUI,NUF

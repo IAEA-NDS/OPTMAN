@@ -93,7 +93,11 @@ C     CREATING LEVELS FOR (P,N) ANALOG STATES CALCULATIONS
       IF(MOD(JO(1),2).GT.0) THEN
           JTEMP=JU
           !JU=NINT(DBLE(JO)/4.0)*2!-JBASE
-          JU=NINT(DBLE(JO-JO(1))/4.0)*2+JSHIFT ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
+          JBASE=JO(1)
+          do IID=1,NUR
+              if (NUMB(IID).eq.NUMB(1)) JBASE=MIN(JBASE,JO(IID))
+          enddo          
+          JU=NINT(DBLE(JO-JBASE)/4.0)*2+JSHIFT ! FOR GS, BETA, GAMMA, AND INV PARITY BANDS
           !!! ABNORMAL BAND SHOULD BE ASSIGNED SEPARATELY!!!
       END IF     
             
@@ -171,7 +175,8 @@ C     KODMA=KOD
       
       IF(.not.EMPIRE) then
 
-      KEYAP=1
+C      KEYAP=1
+      
       CALL ANPOW                       !NOT WORKING YET !!!!!
       IF(MEPRI.NE.98) THEN
       IF(MEPRI.LT.98) PRINT 300, PNAME
@@ -179,30 +184,31 @@ C     KODMA=KOD
   300 FORMAT(/23X,'ANALYZING POWERS FOR SCATTERED ',A8/)
       WRITE(327,'(F10.6,2I3)') EN,MTET,NMAX
       DO 314 M=1,MTET
-      IF(MEPRI.LT.98) PRINT 11,TET(M),(DISC(K,M),K=1,NMAX)
-      WRITE(21,11)TET(M),(DISC(K,M),K=1,NMAX)
-      WRITE(327,111)TET(M),(DISC(K,M),K=1,NMAX)
+      IF(MEPRI.LT.98) PRINT 11,TET(M),(Ay(K,M),K=1,NMAX)
+      WRITE(21,11)TET(M),(Ay(K,M),K=1,NMAX)
+      WRITE(327,111)TET(M),(Ay(K,M),K=1,NMAX)
   314 CONTINUE  
-      ENDIF
-    
-      KEYAP=2
-      CALL ANPOW                          !NOT WORKING YET !!!!!
 
-      IF(MEPRI.NE.98) THEN
-      IF(MEPRI.LT.98) PRINT 338, PNAME
       WRITE(21,338) PNAME
   338 FORMAT(/29X,'POLARIZATION FOR SCATTERED ',A8/)
       WRITE(328,'(F10.6,2I3)') EN,MTET,NMAX
       DO 315 M=1,MTET
-      IF(MEPRI.LT.98) PRINT 11,TET(M),(DISC(K,M),K=1,NMAX)
-      WRITE(21,11)TET(M),(DISC(K,M),K=1,NMAX)
-      WRITE(328,111)TET(M),(DISC(K,M),K=1,NMAX)      
+      IF(MEPRI.LT.98) PRINT 11,TET(M),(Py(K,M),K=1,NMAX)
+      WRITE(21,11)TET(M),(Py(K,M),K=1,NMAX)
+      WRITE(328,111)TET(M),(Py(K,M),K=1,NMAX)      
   315 CONTINUE
       ENDIF
+    
+c      KEYAP=2
+c      CALL ANPOW                          !NOT WORKING YET !!!!!
+
+c      IF(MEPRI.NE.98) THEN
+c      IF(MEPRI.LT.98) PRINT 338, PNAME
+c      ENDIF
 
       ENDIF 
 
-      CALL DISCA
+c      CALL DISCA
       
       IF(MEPRI.NE.98) THEN
       IF(MEPRI.LT.98) PRINT 110, PNAME
